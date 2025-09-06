@@ -1,0 +1,28 @@
+x := 0;
+y := 10;
+z := 5;
+sum := 0;
+
+while x <= 5 do
+    x := x + 1;
+
+if y <= 0 then
+    z := z * 2
+else
+    z := z + 1;
+
+sum := (x + y) * (z - 3);
+
+i := 0;
+while i <= 3 do (
+    i := i + 1;
+    x := x + i;
+    y := y - 1;
+    if x <= y then
+        z := z + 1
+    else
+        z := z - 1
+);
+
+skip;
+final := x + y + z + i

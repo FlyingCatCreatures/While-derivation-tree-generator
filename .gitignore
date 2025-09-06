@@ -1,0 +1,5 @@
+out/*
+.gradle/
+build/
+bin/
+profile.jfr

@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.flyingCatMan.while_language'
+version = '1.0'
+
+application {
+    mainClass = 'while_language.Main'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.eclipse.collections:eclipse-collections-api:11.1.0'
+    implementation 'org.eclipse.collections:eclipse-collections:11.1.0'
+}
+
+tasks.named('run') {
+    standardInput = System.in
+}
+
+
+tasks.register('profile', JavaExec) {
+    group = 'application'
+    description = 'Run the app with JFR profiling enabled'
+
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = application.mainClass
+
+    standardInput = System.in
+
+    jvmArgs = [
+        "-XX:+FlightRecorder",
+        "-XX:StartFlightRecording=duration=60s,filename=profile.jfr"
+    ]
+
+    // forwards application arguments
+    args = project.hasProperty("appArgs") ? project.appArgs.split(",") : []
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed"
+    }
+}

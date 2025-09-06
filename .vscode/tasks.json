@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+     {
+      "label": "Run Program",
+      "type": "shell",
+      "command": "${workspaceFolder}\\run.bat",
+      "problemMatcher": [],
+      "windows": {
+        "command": "${workspaceFolder}\\run.bat"
+      }
+    },
+    {
+        "label": "Run Tests",
+        "type": "shell",
+        "command": "${workspaceFolder}\\test.bat",
+        "problemMatcher": [],
+        "windows": {
+            "command": "${workspaceFolder}\\test.bat"
+        }
+    }
+]
+}
