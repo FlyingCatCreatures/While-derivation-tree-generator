@@ -1,6 +1,8 @@
 plugins {
     id 'java'
     id 'application'
+    id("org.cthing.locc") version "2.1.0"
+
 }
 
 group = 'com.flyingCatMan.while_language'
