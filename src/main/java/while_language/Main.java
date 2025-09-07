@@ -18,13 +18,14 @@ public class Main {
     public static void main(String[] args) {
         if (args.length != 1) {
             System.err.println("Usage: java Main <filename>");
+            System.err.println("Where filename is relative to the input_files directory");
             System.exit(1);
         }
 
         String filename = args[0];
         try {
             // Read file into string
-            String input = Files.readString(Path.of(filename));
+            String input = Files.readString(Path.of("input_files/" + filename));
 
             // Tokenize
             Tokenizer tokenizer = new Tokenizer(input);
@@ -57,7 +58,11 @@ public class Main {
             System.out.println("Generating syntax Tree...");
             DerivationTree dt = new DerivationTree(vars);
             ast.accept(dt);
-            System.out.println(dt.toString());
+            
+             // Write all output to <filename>.out
+            Path outFile = Path.of("output_files/" + filename + "-tree.tex");
+            Files.writeString(outFile, dt.toString());
+            System.out.println("Output written to " + outFile.toAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
         }

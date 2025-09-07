@@ -1,0 +1,65 @@
+% !TEX TS-program = XeLaTeX
+\documentclass[varwidth=10000cm]{standalone}
+\usepackage{prooftree}
+
+\begin{document}
+For this tree we denote $s_{a,b}$ to denote $s[x->a][y->b]$.\\  
+
+\begin{prooftree}
+	\begin{prooftree}
+			\langle x := 0, s_{\bot,\bot} \rangle \rightarrow s_{0,\bot} \ ^{[ass_{ns}]}
+			\langle y := 0, s_{0,\bot} \rangle \rightarrow s_{0,0} \ ^{[ass_{ns}]}
+	\justifies
+		\langle (x := 0; y := 0), s_{\bot,\bot}\rangle \rightarrow s_{0,0}
+	\using
+		[comp_{ns}]
+	\end{prooftree}
+	\begin{prooftree}
+		\begin{prooftree}
+				\langle x := (x + 1), s_{0,0} \rangle \rightarrow s_{1,0} \ ^{[ass_{ns}]}
+				\langle y := (y + x), s_{1,0} \rangle \rightarrow s_{1,1} \ ^{[ass_{ns}]}
+		\justifies
+			\langle (x := (x + 1); y := (y + x)), s_{0,0}\rangle \rightarrow s_{1,1}
+		\using
+			[comp_{ns}]
+		\end{prooftree}
+		\begin{prooftree}
+			\begin{prooftree}
+					\langle x := (x + 1), s_{1,1} \rangle \rightarrow s_{2,1} \ ^{[ass_{ns}]}
+					\langle y := (y + x), s_{2,1} \rangle \rightarrow s_{2,3} \ ^{[ass_{ns}]}
+			\justifies
+				\langle (x := (x + 1); y := (y + x)), s_{1,1}\rangle \rightarrow s_{2,3}
+			\using
+				[comp_{ns}]
+			\end{prooftree}
+			\begin{prooftree}
+				\begin{prooftree}
+						\langle x := (x + 1), s_{2,3} \rangle \rightarrow s_{3,3} \ ^{[ass_{ns}]}
+						\langle y := (y + x), s_{3,3} \rangle \rightarrow s_{3,6} \ ^{[ass_{ns}]}
+				\justifies
+					\langle (x := (x + 1); y := (y + x)), s_{2,3}\rangle \rightarrow s_{3,6}
+				\using
+					[comp_{ns}]
+				\end{prooftree}
+					\langle $while $(x <= 2)$ do $(x := (x + 1); y := (y + x)), s_{3,6} \rangle \rightarrow s_{3,6} \ ^{[while_{ns}^{ff}]}
+			\justifies
+				\langle $while $(x <= 2)$ do $(x := (x + 1); y := (y + x)), s_{2,3}\rangle \rightarrow s_{3,6}
+			\using
+				[while_{ns}^{tt}]
+			\end{prooftree}
+		\justifies
+			\langle $while $(x <= 2)$ do $(x := (x + 1); y := (y + x)), s_{1,1}\rangle \rightarrow s_{3,6}
+		\using
+			[while_{ns}^{tt}]
+		\end{prooftree}
+	\justifies
+		\langle $while $(x <= 2)$ do $(x := (x + 1); y := (y + x)), s_{0,0}\rangle \rightarrow s_{3,6}
+	\using
+		[while_{ns}^{tt}]
+	\end{prooftree}
+\justifies
+	\langle ((x := 0; y := 0); $while $(x <= 2)$ do $(x := (x + 1); y := (y + x))), s_{\bot,\bot}\rangle \rightarrow s_{3,6}
+\using
+	[comp_{ns}]
+\end{prooftree}
+\end{document}

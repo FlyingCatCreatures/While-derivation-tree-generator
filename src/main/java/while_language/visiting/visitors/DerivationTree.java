@@ -14,7 +14,14 @@ public class DerivationTree implements StmVisitor<Void> {
 
     public DerivationTree(Set<String> vars){
         allVars = vars;
-        sb = new StringBuilder(makeLegend() + "\n\n");
+        String preamble = """
+            % !TEX TS-program = XeLaTeX
+            \\documentclass[varwidth=10000cm]{standalone}
+            \\usepackage{prooftree}
+
+            \\begin{document}
+                """;
+        sb = new StringBuilder(preamble + makeLegend() + "\\\\  \n\n");
     }
 
     private void indent() { indent++; }
@@ -51,10 +58,9 @@ public class DerivationTree implements StmVisitor<Void> {
         return "For this tree we denote $s_{" + vars + "}$ to denote $s[" + mapping + "]$.";
     }
 
-
     @Override
     public String toString() {
-        return sb.toString();
+        return sb.toString() + "\\end{document}";
     }
 
     // Returns a representation like s_{a,b,c}

@@ -20,7 +20,7 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
     // Statements
     @Override
     public Void visit(skip s) {
-        sb.append("skip");
+        sb.append("$skip$");
         return null;
     }
 
@@ -43,20 +43,20 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
 
     @Override
     public Void visit(if_then_else ite) {
-        sb.append("if ");
+        sb.append("$if $");
         ite.b().accept(this);
-        sb.append(" then ");
+        sb.append("$ then $");
         ite.s1().accept(this);
-        sb.append(" else ");
+        sb.append("$ else $");
         ite.s2().accept(this);
         return null;
     }
 
     @Override
     public Void visit(while_do w) {
-        sb.append("while ");
+        sb.append("$while $");
         w.b().accept(this);
-        sb.append(" do ");
+        sb.append("$ do $");
         w.s().accept(this);
         return null;
     }
@@ -107,13 +107,13 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
     // Boolean expressions
     @Override
     public Void visit(True t) {
-        sb.append("true");
+        sb.append("$true$");
         return null;
     }
 
     @Override
     public Void visit(False f) {
-        sb.append("false");
+        sb.append("$false$");
         return null;
     }
 
