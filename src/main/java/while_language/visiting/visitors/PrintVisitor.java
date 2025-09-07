@@ -14,6 +14,9 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
         return sb.toString();
     }
 
+    public String toString() {
+        return this.getResult();
+    }
     // Statements
     @Override
     public Void visit(skip s) {

@@ -1,23 +1,19 @@
 package while_language.visiting.visitors;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import while_language.Syntax.stm.*;
 import while_language.visiting.StmVisitor;
 
 public class DerivationTree implements StmVisitor<Void> {
     private StringBuilder sb;
-    public final Map<String, Integer> state = new HashMap<>();
     private int indent = 0;
     private final Set<String> allVars;
     private final Evaluator eval = new Evaluator();
 
-    public DerivationTree(Collection<String> vars){
-        allVars = new TreeSet<>(vars);
+    public DerivationTree(Set<String> vars){
+        allVars = vars;
         sb = new StringBuilder(makeLegend() + "\n\n");
     }
 
@@ -42,7 +38,7 @@ public class DerivationTree implements StmVisitor<Void> {
                 vars.append(",");
                 mapping.append("][");
             }
-            Integer val = state.get(var);
+            Integer val = eval.state.get(var);
             if (val == null) {
                 vars.append("\\bot");
                 mapping.append(var).append("->\\bot");
@@ -89,52 +85,110 @@ public class DerivationTree implements StmVisitor<Void> {
         String var = a.x().x();
         PrintVisitor printer = new PrintVisitor();
         Integer value = a.a().accept(eval);
-        a.a().accept(printer);
-        String originalState = str(state); // Store string representation of s
-        state.put(var, value); // Transition to s's
+        a.accept(printer);
+        String originalState = str(eval.state); // Store string representation of s
+        eval.state.put(var, value); // Transition to s's
         indent();
-        appendLine("\\langle " + var + " := " + printer.toString() + ", "+ originalState + " \\rangle \\rightarrow" + str(state) + " \\ ^{[ass_{ns}]}");
+        appendLine("\\langle " + printer.toString() + ", "+ originalState + " \\rangle \\rightarrow" + str(eval.state) + " \\ ^{[ass_{ns}]}");
         dedent();
         return null;
     }
 
     // < skip, s> -> s [skip_ns]
     public Void visit(skip s) {
-        String stateStr = str(state);
+        String stateStr = str(eval.state);
         indent();
         appendLine("\\langle skip, "+ stateStr + " \\rangle \\rightarrow" + stateStr + " \\ ^{[skip_{ns}]}");
         dedent();
         return null;
     }
 
-
     public Void visit(if_then_else ite){
-        Stm s = ite.b().accept(eval)? ite.s1() : ite.s2();
+        String state_before = str(eval.state);
+        PrintVisitor printer = new PrintVisitor();
+        ite.accept(printer);
 
+        boolean cond = ite.b().accept(eval);
+        
+        appendLine("\\begin{prooftree}");
+        indent();
+        Stm s = cond? ite.s1() : ite.s2();
+        s.accept(this);
+        dedent();
+        appendLine("\\justifies");
+        indent();
+        appendLine("\\langle " + printer.toString() + ", "+ state_before + "\\rangle \\rightarrow " + str(eval.state));
+        dedent();
+         appendLine("\\using");
+        indent();
+        appendLine("[if_{ns}^]" + (cond ? "{tt}":"{ff}"));
+        dedent();
+        appendLine("\\end{prooftree}");
         return null;
     }
     
     public Void visit(while_do wd){
+        PrintVisitor printer = new PrintVisitor();
+        wd.accept(printer);
+
+        String originalState = str(eval.state); 
+
+        boolean cond = wd.b().accept(eval);
+        if(!cond){
+            indent();
+            appendLine("\\langle " + printer.toString() + ", "+ originalState + " \\rangle \\rightarrow" + originalState + " \\ ^{[while_{ns}^{ff}]}");
+            dedent();
+            return null;
+        }
+
+        appendLine("\\begin{prooftree}");
+        indent();
+        wd.s().accept(this);
+        wd.accept(this);
+        dedent();
+        appendLine("\\justifies");
+        indent();
+        appendLine("\\langle " + printer.toString() + ", "+ originalState + "\\rangle \\rightarrow " + str(eval.state));
+        dedent();
+         appendLine("\\using");
+        indent();
+        appendLine("[while_{ns}^{tt}]");
+        dedent();
+        appendLine("\\end{prooftree}");
         return null;
     }    
     
     public Void visit(compound c){
+        String state_before = str(eval.state);
+        PrintVisitor printer = new PrintVisitor();
+        c.accept(printer);
+
+
+        String originalState = str(eval.state); 
+
+        appendLine("\\begin{prooftree}");
+        indent();
+        c.s1().accept(this);
+        c.s2().accept(this);
+        dedent();
+        appendLine("\\justifies");
+        indent();
+        appendLine("\\langle " + printer.toString() + ", "+ state_before + "\\rangle \\rightarrow " + str(eval.state));
+        dedent();
+         appendLine("\\using");
+        indent();
+        appendLine("[comp_{ns}]");
+        dedent();
+        appendLine("\\end{prooftree}");
         return null;
     }
-    //     R visit(assign a);
-    // R visit(skip s);
-    // R visit(if_then_else ite);
-    // R visit(while_do w);
-    // R visit(compound c);
 }
 
 /*
  * A multilayer tree is made by an if statement, composition statement, or while statement with true condition
  * A multilayer tree is made of the folowing format:
  *  \begin{prooftree}
- *      hyp1
- *      hyp2
- *      hyp3_opt
+ *      hyp*
  *  \justifies
  *      concl
  *  \ using

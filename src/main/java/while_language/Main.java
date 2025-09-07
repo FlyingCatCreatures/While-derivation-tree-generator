@@ -4,6 +4,7 @@ import while_language.AST_constructor.Parser;
 import while_language.AST_constructor.Tokenizer;
 import while_language.AST_constructor.Tokenizer.Token;
 import while_language.Syntax.stm.Stm;
+import while_language.visiting.visitors.DerivationTree;
 import while_language.visiting.visitors.Evaluator;
 import while_language.visiting.visitors.PrintVisitor;
 import while_language.visiting.visitors.SyntaxTreePrintVisitor;
@@ -11,6 +12,7 @@ import while_language.visiting.visitors.SyntaxTreePrintVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
@@ -37,6 +39,7 @@ public class Main {
             // Parse into AST
             Parser parser = new Parser(tokens);
             Stm ast = parser.parseStm();
+            Set<String> vars = parser.getVars();
 
             // Print AST
             //System.out.println("\nSyntax Tree:");
@@ -50,6 +53,11 @@ public class Main {
             ast.accept(e);
             System.out.println("Final state: " + e.state);
 
+            // Create derivation tree
+            System.out.println("Generating syntax Tree...");
+            DerivationTree dt = new DerivationTree(vars);
+            ast.accept(dt);
+            System.out.println(dt.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

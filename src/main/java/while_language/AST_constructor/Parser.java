@@ -23,13 +23,21 @@ import while_language.Syntax.stm.skip;
 import while_language.Syntax.stm.while_do;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Parser {
     private final List<Token> tokens;
     private int pos = 0;
+    private final Set<String> vars = new TreeSet<>();
+
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
+    }
+
+    public Set<String> getVars() {
+       return vars;
     }
 
     private Token peek() {
@@ -60,6 +68,7 @@ public class Parser {
         switch (next.type()) {
             case IDENT:
                 String varName = next.value();
+                vars.add(varName);
                 Token assign = consume();
                 if (assign.type() != TokenType.OP || !assign.value().equals(":="))
                     throw new RuntimeException("Expected ':=' after identifier at position " + pos);
@@ -147,7 +156,9 @@ public class Parser {
             case NUMBER:
                 return new Num(next.value());
             case IDENT:
-                return new Var(next.value());
+                String varName = next.value();
+                vars.add(varName);
+                return new Var(varName);
             case LPARENTHESIS:
                 Aexp inside = parseAexp();
                 if (consume().type() != TokenType.RPARENTHESIS) throw new RuntimeException("Expected ')' at position " + pos);
