@@ -7,12 +7,14 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import while_language.Syntax.stm.*;
+import while_language.visiting.StmVisitor;
 
-public class DerivationTree extends Evaluator {
+public class DerivationTree implements StmVisitor<Void> {
     private StringBuilder sb;
     public final Map<String, Integer> state = new HashMap<>();
     private int indent = 0;
     private final Set<String> allVars;
+    private final Evaluator eval = new Evaluator();
 
     public DerivationTree(Collection<String> vars){
         allVars = new TreeSet<>(vars);
@@ -82,26 +84,48 @@ public class DerivationTree extends Evaluator {
         return state_sb.toString();
     }
 
-   public Void visit(assign a) {
+    // < x:=a, s> -> s' [ass_ns]
+    public Void visit(assign a) {
         String var = a.x().x();
-        Integer value = a.a().accept(this);
-        String originalState = str(state);
-        state.put(var, value);
+        PrintVisitor printer = new PrintVisitor();
+        Integer value = a.a().accept(eval);
+        a.a().accept(printer);
+        String originalState = str(state); // Store string representation of s
+        state.put(var, value); // Transition to s's
         indent();
-        appendLine("\\langle " + var + " := " + value + ", "+ originalState + " \\rangle \\rightarrow" + str(state) + " \\ ^{[ass_{ns}]}");
+        appendLine("\\langle " + var + " := " + printer.toString() + ", "+ originalState + " \\rangle \\rightarrow" + str(state) + " \\ ^{[ass_{ns}]}");
         dedent();
         return null;
     }
 
-    @Override
+    // < skip, s> -> s [skip_ns]
     public Void visit(skip s) {
         String stateStr = str(state);
         indent();
-        appendLine("\\langle skip, "+ stateStr + " \\rangle \\rightarrow" + stateStr);
+        appendLine("\\langle skip, "+ stateStr + " \\rangle \\rightarrow" + stateStr + " \\ ^{[skip_{ns}]}");
         dedent();
         return null;
     }
 
+
+    public Void visit(if_then_else ite){
+        Stm s = ite.b().accept(eval)? ite.s1() : ite.s2();
+
+        return null;
+    }
+    
+    public Void visit(while_do wd){
+        return null;
+    }    
+    
+    public Void visit(compound c){
+        return null;
+    }
+    //     R visit(assign a);
+    // R visit(skip s);
+    // R visit(if_then_else ite);
+    // R visit(while_do w);
+    // R visit(compound c);
 }
 
 /*
