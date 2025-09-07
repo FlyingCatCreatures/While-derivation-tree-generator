@@ -48,7 +48,14 @@ public class Parser {
         return tokens.get(pos++);
     }
 
-    public Stm parseStm() {
+    public Stm generateAST(){
+        Stm ret = this.parseStm();
+        if(pos!=tokens.size()-1 && pos != tokens.size()){
+            throw new RuntimeException("Program done parsing but input buffer not exhausted. Did you forget a semicolon at poition " + pos + "?");
+        }
+        return ret;
+    }
+    private Stm parseStm() {
         Stm stmt = parseAtomicStm();
 
         // Only combine with ; if we’re not at the end of a parenthesized block

@@ -16,13 +16,30 @@ import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Usage: java Main <filename>");
+        if (args.length < 1 || args.length > 3) {
+            System.err.println("Usage: java path/to/Main <filename> [--pdf-maxwidth x]");
             System.err.println("Where filename is relative to the input_files directory");
+            System.err.println("And x is an integer representing a maximum pdf width in centimeters");
             System.exit(1);
         }
 
         String filename = args[0];
+        String pdf_maxwidth = "100cm";
+
+        // Parse optional flag
+        if (args.length == 3){ if(args[1].equals("--pdf-maxwidth")) {
+            try{
+                Integer.parseInt(args[2]);
+            }catch (NumberFormatException e){
+                System.err.println("--pdf-maxwidth must be an integer, but found " + args[2]);
+                System.exit(1);
+            }
+            pdf_maxwidth = args[2] + "cm";
+        } else {
+            System.err.println("Unknown 2nd argument passed: " + args[1]);
+            System.err.println("Unknown 2nd argument passed: " + args[1]);
+        }}
+        
         try {
             // Read file into string
             String input = Files.readString(Path.of("input_files/" + filename));
@@ -39,7 +56,7 @@ public class Main {
 
             // Parse into AST
             Parser parser = new Parser(tokens);
-            Stm ast = parser.parseStm();
+            Stm ast = parser.generateAST();
             Set<String> vars = parser.getVars();
 
             // Print AST
@@ -56,7 +73,7 @@ public class Main {
 
             // Create derivation tree
             System.out.println("Generating syntax Tree...");
-            DerivationTree dt = new DerivationTree(vars);
+            DerivationTree dt = new DerivationTree(vars, pdf_maxwidth);
             ast.accept(dt);
             
              // Write all output to <filename>.out

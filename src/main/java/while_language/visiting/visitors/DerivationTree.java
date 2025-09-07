@@ -12,15 +12,15 @@ public class DerivationTree implements StmVisitor<Void> {
     private final Set<String> allVars;
     private final Evaluator eval = new Evaluator();
 
-    public DerivationTree(Set<String> vars){
+    public DerivationTree(Set<String> vars, String varwidth){
         allVars = vars;
         String preamble = """
-            % !TEX TS-program = XeLaTeX
-            \\documentclass[varwidth=10000cm]{standalone}
+            %% !TEX TS-program = XeLaTeX
+            \\documentclass[varwidth=%s]{standalone}
             \\usepackage{prooftree}
 
             \\begin{document}
-                """;
+            """.formatted(varwidth);
         sb = new StringBuilder(preamble + makeLegend() + "\\\\  \n\n");
     }
 
