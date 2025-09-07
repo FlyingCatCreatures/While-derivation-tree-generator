@@ -46,7 +46,7 @@ java -cp build/classes/java/main while_language.Main WHILE_FILE \[--pdf-maxwidth
 
 Where `WHILE_FILE` is the name of a file located in the `input_files` directory and `x` is an integer, which will eventually be the max width of the produced document in cm.
 
-You don't need to build the program, as the pulled repository already has an up to date build, but you want to you can by doing:
+You don't need to build the program, as the repository already has an up to date build, but you want to you can by doing:
 ```sh
 ./gradlew build
 ```
