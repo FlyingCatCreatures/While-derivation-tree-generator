@@ -52,7 +52,7 @@ public class Evaluator implements StmVisitor<Void>, AexpVisitor<Integer>, BexpVi
 
     @Override
     public Boolean visit(equals e) {
-        return e.a1().accept(this)==e.a2().accept(this);
+        return e.a1().accept(this).equals(e.a2().accept(this));
     }
 
     @Override
