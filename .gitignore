@@ -1,5 +1,12 @@
 out/*
 .gradle/
-build/
+build/distributions
+build/generated
+build/libs
+build/reports
+build/resources
+build/scripts
+build/test-results
+build/tmp
 bin/
 profile.jfr
