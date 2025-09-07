@@ -223,7 +223,7 @@ public class Parser {
 }
 
 /*
- * The language specification we use has been changed slightly to allow for easier use of ascii, see:
+ * The language specification we use has been changed slightly to allow for easier use in an ascii editor, see:
  *  - The negation operator's symbol
  *  - The less than or equal to operator
  *  - The conjunction operator
