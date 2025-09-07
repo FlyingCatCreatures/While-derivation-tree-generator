@@ -44,7 +44,7 @@ To run the program, use the following command:
 ./gradlew run --args="file"
 ```
 
-Where `file` is the name of a file located in the `input_files` directory. The program will process the input and write the resulting derivation tree to the `output_files` directory.
+Where `file` is the name of a file located in the `input_files` directory. The program will process the input and write the resulting derivation tree to the `output_files` directory. The output tex file will have to be moved somewhere where you have the prooftree package installed before it can succesfully typeset.
 
 ## Important Notes
 
