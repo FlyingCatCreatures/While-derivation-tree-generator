@@ -32,20 +32,19 @@ public class DerivationTree implements StmVisitor<Void> {
         StringBuilder vars = new StringBuilder();
         StringBuilder mapping = new StringBuilder();
         boolean first = true;
-
+        int idx = 0;
         for (String var : allVars) {
             if (!first) {
                 vars.append(",");
                 mapping.append("][");
             }
-            Integer val = eval.state.get(var);
-            if (val == null) {
-                vars.append("\\bot");
-                mapping.append(var).append("->\\bot");
-            } else {
-                vars.append(val);
-                mapping.append(var).append("->").append(val);
-            }
+            // symbolic subscript: a, b, c, ...
+            char sym = (char) ('a' + idx);
+            vars.append(sym);
+            mapping.append(var).append("->").append(sym);
+            
+
+            idx++;
             first = false;
         }
 
