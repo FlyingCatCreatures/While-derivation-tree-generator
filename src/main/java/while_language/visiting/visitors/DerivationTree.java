@@ -89,7 +89,7 @@ public class DerivationTree implements StmVisitor<Void> {
         String originalState = str(eval.state); // Store string representation of s
         eval.state.put(var, value); // Transition to s's
         indent();
-        appendLine("\\langle " + printer.toString() + ", "+ originalState + " \\rangle \\rightarrow" + str(eval.state) + " \\ ^{[ass_{ns}]}");
+        appendLine("\\langle " + printer.toString() + ", "+ originalState + " \\rangle \\rightarrow " + str(eval.state) + " \\ ^{[ass_{ns}]}");
         dedent();
         return null;
     }
@@ -136,7 +136,7 @@ public class DerivationTree implements StmVisitor<Void> {
         boolean cond = wd.b().accept(eval);
         if(!cond){
             indent();
-            appendLine("\\langle " + printer.toString() + ", "+ originalState + " \\rangle \\rightarrow" + originalState + " \\ ^{[while_{ns}^{ff}]}");
+            appendLine("\\langle " + printer.toString() + ", "+ originalState + " \\rangle \\rightarrow " + originalState + " \\ ^{[while_{ns}^{ff}]}");
             dedent();
             return null;
         }
