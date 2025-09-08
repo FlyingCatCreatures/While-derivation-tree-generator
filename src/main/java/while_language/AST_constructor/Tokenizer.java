@@ -67,9 +67,12 @@ public class Tokenizer {
             } else if (c == ';') {
                 tokens.add(new Token(TokenType.SEMICOLON, ";"));
                 pos++;
-            } else {
+            } else if (c== '%') {
+                do pos++;
+                while(input.charAt(pos) != '\n');
+            }else {
                 tokens.add(readOp());
-            }
+            } 
         }
         tokens.add(new Token(TokenType.EOF, ""));
         return tokens;

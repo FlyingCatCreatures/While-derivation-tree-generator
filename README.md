@@ -11,6 +11,7 @@ This project generates derivation trees for programs written in a simple While l
 - The less than or equal to operator uses `<=`.
 - The conjunction operator uses `&`.
 - Explicitly allow grouping using parentheses.
+- While not officially a part of the grammar, comments are supported, signified by a %. Multiline comments are not supported though.
 
 Below is the full specification used:
 

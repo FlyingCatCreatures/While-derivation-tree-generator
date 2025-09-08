@@ -1,0 +1,9 @@
+% This file should be called with an initial state in which n is defined
+% The factorial of n will then be computed and stored in r
+% See README.md for how to do that, specifically the --init-state flag
+
+r := 1; 
+while !n<=0 do (
+    r := r * n;
+    n := n - 1
+)
