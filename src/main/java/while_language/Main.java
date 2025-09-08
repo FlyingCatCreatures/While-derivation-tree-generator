@@ -92,6 +92,12 @@ public class Main {
             //ast.accept(printer);
             //System.out.println(printer.getResult());
 
+            // Print program
+            // System.out.println("\n Program:");
+            // PrintVisitor pv = new PrintVisitor();
+            // ast.accept(pv);
+            // System.out.println(pv);
+
             // Evaluate program
             System.out.println("Evaluating...");
             Evaluator e = new Evaluator(new HashMap<>(init_state)); // new Hashmap(...) used to make a copy of init_state instead of modifying it

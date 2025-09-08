@@ -33,37 +33,42 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
 
     @Override
     public Void visit(compound c) {
-        sb.append("(");
         c.s1().accept(this);
         sb.append("; ");
         c.s2().accept(this);
-        sb.append(")");
         return null;
     }
 
     @Override
     public Void visit(if_then_else ite) {
+        boolean doParenthesisForS1 = ite.s1() instanceof compound;
+        boolean doParenthesisForS2 = ite.s2() instanceof compound;
+
         sb.append("$if $");
         ite.b().accept(this);
+        
         sb.append("$ then $");
-        sb.append("(");
+        if(doParenthesisForS1) sb.append("(");
         ite.s1().accept(this);
-        sb.append(")");
+        if(doParenthesisForS1) sb.append(")");
+
         sb.append("$ else $");
-        sb.append("(");
+        if(doParenthesisForS2) sb.append("(");
         ite.s2().accept(this);
-        sb.append(")");
+        if(doParenthesisForS2) sb.append(")");
         return null;
     }
 
     @Override
     public Void visit(while_do w) {
+        boolean doParenthesis = w.s() instanceof compound;
+
         sb.append("$while $");
         w.b().accept(this);
         sb.append("$ do $");
-        sb.append("(");
+        if (doParenthesis) sb.append("(");
         w.s().accept(this);
-        sb.append(")");
+        if (doParenthesis) sb.append(")");
         return null;
     }
 
