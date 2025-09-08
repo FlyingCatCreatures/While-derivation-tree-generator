@@ -55,7 +55,7 @@ public class DerivationTree implements StmVisitor<Void> {
             first = false;
         }
 
-        return "For this tree we denote $s_{" + vars + "}$ to denote $s[" + mapping + "]$.";
+        return "For this tree we denote $s_{" + vars + "}$ to denote $s[" + mapping + "]$, where " + vars + "\\in \\mathBB{N}";
     }
 
     @Override

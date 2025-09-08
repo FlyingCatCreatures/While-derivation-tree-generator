@@ -1,7 +1,7 @@
-x := 0;
-y := 0;
-while x<=2 do (
-    x := x + 1;
-    y := y + x
-);
-y := 2 * y
+x := 23;
+y := 6;
+z := 0;
+while y <= x do (
+    z := z + 1;
+    x := x - y
+)

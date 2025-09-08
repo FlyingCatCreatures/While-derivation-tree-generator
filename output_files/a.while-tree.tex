@@ -3,69 +3,69 @@
 \usepackage{prooftree}
 
 \begin{document}
-For this tree we denote $s_{a,b}$ to denote $s[x->a][y->b]$.\\  
+For this tree we denote $s_{a,b,c}$ to denote $s[x->a][y->b][z->c]$, where a,b,c\in \mathBB{N}\\  
 
 \begin{prooftree}
 	\begin{prooftree}
 		\begin{prooftree}
-				\langle x := 0, s_{\bot,\bot} \rangle \rightarrow s_{0,\bot} \ ^{[ass_{ns}]}
-				\langle y := 0, s_{0,\bot} \rangle \rightarrow s_{0,0} \ ^{[ass_{ns}]}
+				\langle x := 23, s_{\bot,\bot,\bot} \rangle \rightarrow s_{23,\bot,\bot} \ ^{[ass_{ns}]}
+				\langle y := 6, s_{23,\bot,\bot} \rangle \rightarrow s_{23,6,\bot} \ ^{[ass_{ns}]}
 		\justifies
-			\langle (x := 0; y := 0), s_{\bot,\bot}\rangle \rightarrow s_{0,0}
+			\langle (x := 23; y := 6), s_{\bot,\bot,\bot}\rangle \rightarrow s_{23,6,\bot}
+		\using
+			[comp_{ns}]
+		\end{prooftree}
+			\langle z := 0, s_{23,6,\bot} \rangle \rightarrow s_{23,6,0} \ ^{[ass_{ns}]}
+	\justifies
+		\langle ((x := 23; y := 6); z := 0), s_{\bot,\bot,\bot}\rangle \rightarrow s_{23,6,0}
+	\using
+		[comp_{ns}]
+	\end{prooftree}
+	\begin{prooftree}
+		\begin{prooftree}
+				\langle z := (z + 1), s_{23,6,0} \rangle \rightarrow s_{23,6,1} \ ^{[ass_{ns}]}
+				\langle x := (x - y), s_{23,6,1} \rangle \rightarrow s_{17,6,1} \ ^{[ass_{ns}]}
+		\justifies
+			\langle (z := (z + 1); x := (x - y)), s_{23,6,0}\rangle \rightarrow s_{17,6,1}
 		\using
 			[comp_{ns}]
 		\end{prooftree}
 		\begin{prooftree}
 			\begin{prooftree}
-					\langle x := (x + 1), s_{0,0} \rangle \rightarrow s_{1,0} \ ^{[ass_{ns}]}
-					\langle y := (y + x), s_{1,0} \rangle \rightarrow s_{1,1} \ ^{[ass_{ns}]}
+					\langle z := (z + 1), s_{17,6,1} \rangle \rightarrow s_{17,6,2} \ ^{[ass_{ns}]}
+					\langle x := (x - y), s_{17,6,2} \rangle \rightarrow s_{11,6,2} \ ^{[ass_{ns}]}
 			\justifies
-				\langle (x := (x + 1); y := (y + x)), s_{0,0}\rangle \rightarrow s_{1,1}
+				\langle (z := (z + 1); x := (x - y)), s_{17,6,1}\rangle \rightarrow s_{11,6,2}
 			\using
 				[comp_{ns}]
 			\end{prooftree}
 			\begin{prooftree}
 				\begin{prooftree}
-						\langle x := (x + 1), s_{1,1} \rangle \rightarrow s_{2,1} \ ^{[ass_{ns}]}
-						\langle y := (y + x), s_{2,1} \rangle \rightarrow s_{2,3} \ ^{[ass_{ns}]}
+						\langle z := (z + 1), s_{11,6,2} \rangle \rightarrow s_{11,6,3} \ ^{[ass_{ns}]}
+						\langle x := (x - y), s_{11,6,3} \rangle \rightarrow s_{5,6,3} \ ^{[ass_{ns}]}
 				\justifies
-					\langle (x := (x + 1); y := (y + x)), s_{1,1}\rangle \rightarrow s_{2,3}
+					\langle (z := (z + 1); x := (x - y)), s_{11,6,2}\rangle \rightarrow s_{5,6,3}
 				\using
 					[comp_{ns}]
 				\end{prooftree}
-				\begin{prooftree}
-					\begin{prooftree}
-							\langle x := (x + 1), s_{2,3} \rangle \rightarrow s_{3,3} \ ^{[ass_{ns}]}
-							\langle y := (y + x), s_{3,3} \rangle \rightarrow s_{3,6} \ ^{[ass_{ns}]}
-					\justifies
-						\langle (x := (x + 1); y := (y + x)), s_{2,3}\rangle \rightarrow s_{3,6}
-					\using
-						[comp_{ns}]
-					\end{prooftree}
-						\langle $while $(x <= 2)$ do $(x := (x + 1); y := (y + x)), s_{3,6} \rangle \rightarrow s_{3,6} \ ^{[while_{ns}^{ff}]}
-				\justifies
-					\langle $while $(x <= 2)$ do $(x := (x + 1); y := (y + x)), s_{2,3}\rangle \rightarrow s_{3,6}
-				\using
-					[while_{ns}^{tt}]
-				\end{prooftree}
+					\langle $while $(y <= x)$ do $(z := (z + 1); x := (x - y)), s_{5,6,3} \rangle \rightarrow s_{5,6,3} \ ^{[while_{ns}^{ff}]}
 			\justifies
-				\langle $while $(x <= 2)$ do $(x := (x + 1); y := (y + x)), s_{1,1}\rangle \rightarrow s_{3,6}
+				\langle $while $(y <= x)$ do $(z := (z + 1); x := (x - y)), s_{11,6,2}\rangle \rightarrow s_{5,6,3}
 			\using
 				[while_{ns}^{tt}]
 			\end{prooftree}
 		\justifies
-			\langle $while $(x <= 2)$ do $(x := (x + 1); y := (y + x)), s_{0,0}\rangle \rightarrow s_{3,6}
+			\langle $while $(y <= x)$ do $(z := (z + 1); x := (x - y)), s_{17,6,1}\rangle \rightarrow s_{5,6,3}
 		\using
 			[while_{ns}^{tt}]
 		\end{prooftree}
 	\justifies
-		\langle ((x := 0; y := 0); $while $(x <= 2)$ do $(x := (x + 1); y := (y + x))), s_{\bot,\bot}\rangle \rightarrow s_{3,6}
+		\langle $while $(y <= x)$ do $(z := (z + 1); x := (x - y)), s_{23,6,0}\rangle \rightarrow s_{5,6,3}
 	\using
-		[comp_{ns}]
+		[while_{ns}^{tt}]
 	\end{prooftree}
-		\langle y := (2 * y), s_{3,6} \rangle \rightarrow s_{3,12} \ ^{[ass_{ns}]}
 \justifies
-	\langle (((x := 0; y := 0); $while $(x <= 2)$ do $(x := (x + 1); y := (y + x))); y := (2 * y)), s_{\bot,\bot}\rangle \rightarrow s_{3,12}
+	\langle (((x := 23; y := 6); z := 0); $while $(y <= x)$ do $(z := (z + 1); x := (x - y))), s_{\bot,\bot,\bot}\rangle \rightarrow s_{5,6,3}
 \using
 	[comp_{ns}]
 \end{prooftree}
