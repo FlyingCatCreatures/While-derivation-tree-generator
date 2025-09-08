@@ -30,6 +30,9 @@ public class Evaluator implements StmVisitor<Void>, AexpVisitor<Integer>, BexpVi
         state = new HashMap<>();
     }
 
+    public Evaluator(Map<String, Integer> init_state){
+        state = init_state;
+    }
     @Override
     public Boolean visit(True t) {
         return true;

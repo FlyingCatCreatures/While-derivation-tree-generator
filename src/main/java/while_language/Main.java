@@ -11,35 +11,58 @@ import while_language.visiting.visitors.SyntaxTreePrintVisitor;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
-        if (args.length < 1 || args.length > 3) {
-            System.err.println("Usage: java path/to/Main <filename> [--pdf-maxwidth x]");
+        if (args.length < 1) {
+            System.err.println("Usage: java path/to/Main <filename> [--pdf-maxwidth x] [--init_state n var_1 val_1 var_2 val_2 ... var_n val_n]");
             System.err.println("Where filename is relative to the input_files directory");
             System.err.println("And x is an integer representing a maximum pdf width in centimeters");
+            System.err.println("And var_i and val_i are a variable name and an integer respectively.");
             System.exit(1);
         }
 
         String filename = args[0];
         String pdf_maxwidth = "100cm";
+        Map<String, Integer> init_state = new HashMap<>();
+        for(int i=1; i<args.length; i++){
+            if (args[i].equals("--pdf-maxwidth")){
+                try{
+                    i++;
+                    Integer.parseInt(args[i]);
+                }catch (NumberFormatException e){
+                    System.err.println("--pdf-maxwidth must be an integer, but found " + args[2]);
+                    System.exit(1);
+                }
+                pdf_maxwidth = args[i] + "cm";
+            } else if(args[i].equals("--init-state")){
+                int n = 0;
+                try{
+                    i++;
+                    n = Integer.parseInt(args[i]);
+                    i++;
+                }catch (NumberFormatException e){
+                    System.err.println("argument 'n' for --init-state must be an integer");
+                    System.exit(1);
+                }
 
-        // Parse optional flag
-        if (args.length == 3){ if(args[1].equals("--pdf-maxwidth")) {
-            try{
-                Integer.parseInt(args[2]);
-            }catch (NumberFormatException e){
-                System.err.println("--pdf-maxwidth must be an integer, but found " + args[2]);
-                System.exit(1);
+                for(int j=i; j < 2*n + i && j+1 < args.length; j+=2){
+                    try{
+                        init_state.put(args[j], Integer.parseInt(args[j+1]));
+                    } catch(NumberFormatException e){
+                        System.err.println("all 'val' arguments for --init-state must be integers, but found " + args[j+1]);
+                        System.exit(1);
+                    }
+                }
+                i = i + 2*n - 1; // Skip processed arguments
             }
-            pdf_maxwidth = args[2] + "cm";
-        } else {
-            System.err.println("Unknown 2nd argument passed: " + args[1]);
-            System.err.println("Unknown 2nd argument passed: " + args[1]);
-        }}
+        }
         
+
         try {
             // Read file into string
             String input = Files.readString(Path.of("input_files/" + filename));
@@ -67,13 +90,13 @@ public class Main {
 
             // Evaluate program
             System.out.println("Evaluating...");
-            Evaluator e = new Evaluator();
+            Evaluator e = new Evaluator(new HashMap<>(init_state)); // new Hashmap(...) used to make a copy of init_state instead of modifying it
             ast.accept(e);
             System.out.println("Final state: " + e.state);
 
             // Create derivation tree
             System.out.println("Generating syntax Tree...");
-            DerivationTree dt = new DerivationTree(vars, pdf_maxwidth);
+            DerivationTree dt = new DerivationTree(vars, pdf_maxwidth, new HashMap<>(init_state)); // new Hashmap(...) used to make a copy of init_state instead of modifying it
             ast.accept(dt);
             
              // Write all output to <filename>.out

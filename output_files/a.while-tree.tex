@@ -6,21 +6,7 @@
 For this tree we denote $s_{a,b,c}$ to denote $s[x->a][y->b][z->c]$, where a,b,c\in \mathBB{N}\\  
 
 \begin{prooftree}
-	\begin{prooftree}
-		\begin{prooftree}
-				\langle x := 23, s_{\bot,\bot,\bot} \rangle \rightarrow s_{23,\bot,\bot} \ ^{[ass_{ns}]}
-				\langle y := 6, s_{23,\bot,\bot} \rangle \rightarrow s_{23,6,\bot} \ ^{[ass_{ns}]}
-		\justifies
-			\langle (x := 23; y := 6), s_{\bot,\bot,\bot}\rangle \rightarrow s_{23,6,\bot}
-		\using
-			[comp_{ns}]
-		\end{prooftree}
-			\langle z := 0, s_{23,6,\bot} \rangle \rightarrow s_{23,6,0} \ ^{[ass_{ns}]}
-	\justifies
-		\langle ((x := 23; y := 6); z := 0), s_{\bot,\bot,\bot}\rangle \rightarrow s_{23,6,0}
-	\using
-		[comp_{ns}]
-	\end{prooftree}
+		\langle z := 0, s_{23,6,\bot} \rangle \rightarrow s_{23,6,0} \ ^{[ass_{ns}]}
 	\begin{prooftree}
 		\begin{prooftree}
 				\langle z := (z + 1), s_{23,6,0} \rangle \rightarrow s_{23,6,1} \ ^{[ass_{ns}]}
@@ -65,7 +51,7 @@ For this tree we denote $s_{a,b,c}$ to denote $s[x->a][y->b][z->c]$, where a,b,c
 		[while_{ns}^{tt}]
 	\end{prooftree}
 \justifies
-	\langle (((x := 23; y := 6); z := 0); $while $(y <= x)$ do $(z := (z + 1); x := (x - y))), s_{\bot,\bot,\bot}\rangle \rightarrow s_{5,6,3}
+	\langle (z := 0; $while $(y <= x)$ do $(z := (z + 1); x := (x - y))), s_{23,6,\bot}\rangle \rightarrow s_{5,6,3}
 \using
 	[comp_{ns}]
 \end{prooftree}

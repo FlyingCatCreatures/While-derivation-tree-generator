@@ -41,10 +41,15 @@ b ::=   true |
 To run the program, use the following command:
 
 ```sh
-java -cp build/classes/java/main while_language.Main WHILE_FILE \[--pdf-maxwidth x\]
+java -cp build/classes/java/main while_language.Main WHILE_FILE 
 ```
 
-Where `WHILE_FILE` is the name of a file located in the `input_files` directory and `x` is an integer, which will eventually be the max width of the produced document in cm.
+Where `WHILE_FILE` is the name of a file located in the `input_files` directory. There are also two optional flags:
+```sh
+--pdf-maxwidth x
+--init-state n var_1 val_1 var_2 val_2 ... var_n val_n
+```
+Where x, n, and all the val's are integers. The former sets the max width of the eventually produced pdf of the derivation tree, and init-state defines a starting state to execute the program in.
 
 You don't need to build the program, as the repository already has an up to date build, but you want to you can by doing:
 ```sh

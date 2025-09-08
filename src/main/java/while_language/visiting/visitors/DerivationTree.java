@@ -10,9 +10,10 @@ public class DerivationTree implements StmVisitor<Void> {
     private StringBuilder sb;
     private int indent = 0;
     private final Set<String> allVars;
-    private final Evaluator eval = new Evaluator();
+    private final Evaluator eval;
+    public DerivationTree(Set<String> vars, String varwidth,  Map<String, Integer> init_state){
+        eval = new Evaluator(init_state);
 
-    public DerivationTree(Set<String> vars, String varwidth){
         allVars = vars;
         String preamble = """
             %% !TEX TS-program = XeLaTeX
