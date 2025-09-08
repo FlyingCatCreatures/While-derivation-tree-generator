@@ -81,25 +81,25 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
 
     @Override
     public Void visit(multiply m) {
-        appendAexp(m.a1(), getPrecedence(m));
+        appendExp(m.a1(), getPrecedence(m));
         sb.append(" * ");
-        appendAexp(m.a2(), getPrecedence(m));
+        appendExp(m.a2(), getPrecedence(m));
         return null;
     }
 
     @Override
     public Void visit(addition a) {
-        appendAexp(a.a1(), getPrecedence(a));
+        appendExp(a.a1(), getPrecedence(a));
         sb.append(" + ");
-        appendAexp(a.a2(), getPrecedence(a));
+        appendExp(a.a2(), getPrecedence(a));
         return null;
     }
 
     @Override
     public Void visit(subtract s) {
-        appendAexp(s.a1(), getPrecedence(s));
+        appendExp(s.a1(), getPrecedence(s));
         sb.append(" - ");
-        appendAexp(s.a2(), getPrecedence(s));
+        appendExp(s.a2(), getPrecedence(s));
         return null;
     }
 
@@ -118,38 +118,32 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
 
     @Override
     public Void visit(equals e) {
-        sb.append("(");
         e.a1().accept(this);
         sb.append(" = ");
         e.a2().accept(this);
-        sb.append(")");
         return null;
     }
 
     @Override
     public Void visit(leq l) {
-        sb.append("(");
         l.a1().accept(this);
         sb.append(" <= ");
         l.a2().accept(this);
-        sb.append(")");
         return null;
     }
 
     @Override
     public Void visit(conjunction c) {
-        sb.append("(");
-        c.b1().accept(this);
+        appendExp(c.b1(), getPrecedence(c));
         sb.append(" \\land ");
-        c.b2().accept(this);
-        sb.append(")");
+        appendExp(c.b2(), getPrecedence(c));
         return null;
     }
 
     @Override
     public Void visit(negation n) {
         sb.append("!");
-        n.b().accept(this);
+        appendExp(n.b(), getPrecedence(n));
         return null;
     }
 
@@ -162,7 +156,17 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
         return -1; 
     }
 
-    private void appendAexp(Aexp aexp, int parentPrecedence) {
+    private int getPrecedence(Bexp bexp) {
+        if (bexp instanceof True || 
+            bexp instanceof False || 
+            bexp instanceof equals ||
+            bexp instanceof leq) return 99;         // Terminal expressions, never need to be parenthesised
+        if (bexp instanceof negation) return 3;     // Higher than conjunction
+        if (bexp instanceof conjunction) return 0;  // Lowest precedence
+        return -1;
+    }
+
+    private void appendExp(Aexp aexp, int parentPrecedence) {
         int childPrecedence = getPrecedence(aexp);
         if (childPrecedence < parentPrecedence) {
             sb.append("(");
@@ -170,6 +174,17 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
             sb.append(")");
         } else {
             aexp.accept(this);
+        }
+    }
+
+    private void appendExp(Bexp bexp, int parentPrecedence) {
+        int childPrecedence = getPrecedence(bexp);
+        if (childPrecedence < parentPrecedence) {
+            sb.append("(");
+            bexp.accept(this);
+            sb.append(")");
+        } else {
+            bexp.accept(this);
         }
     }
 }
