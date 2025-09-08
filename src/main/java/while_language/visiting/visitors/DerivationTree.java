@@ -105,7 +105,7 @@ public class DerivationTree implements StmVisitor<Void> {
     public Void visit(skip s) {
         String stateStr = str(eval.state);
         indent();
-        appendLine("\\langle skip, "+ stateStr + " \\rangle \\rightarrow" + stateStr + " \\ ^{[skip_{ns}]}");
+        appendLine("\\langle skip, "+ stateStr + " \\rangle \\rightarrow " + stateStr + " \\ ^{[skip_{ns}]}");
         dedent();
         return null;
     }
@@ -128,7 +128,7 @@ public class DerivationTree implements StmVisitor<Void> {
         dedent();
          appendLine("\\using");
         indent();
-        appendLine("[if_{ns}^]" + (cond ? "{tt}":"{ff}"));
+        appendLine("[if_{ns}^" + (cond ? "{tt}":"{ff}") + "]");
         dedent();
         appendLine("\\end{prooftree}");
         return null;

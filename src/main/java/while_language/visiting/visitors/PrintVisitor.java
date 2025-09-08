@@ -46,9 +46,13 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
         sb.append("$if $");
         ite.b().accept(this);
         sb.append("$ then $");
+        sb.append("(");
         ite.s1().accept(this);
+        sb.append(")");
         sb.append("$ else $");
+        sb.append("(");
         ite.s2().accept(this);
+        sb.append(")");
         return null;
     }
 
@@ -57,11 +61,12 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
         sb.append("$while $");
         w.b().accept(this);
         sb.append("$ do $");
+        sb.append("(");
         w.s().accept(this);
+        sb.append(")");
         return null;
     }
 
-    // Arithmetic expressions
     @Override
     public Void visit(Num n) {
         sb.append(n.n());
@@ -75,32 +80,26 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
     }
 
     @Override
+    public Void visit(multiply m) {
+        appendAexp(m.a1(), getPrecedence(m));
+        sb.append(" * ");
+        appendAexp(m.a2(), getPrecedence(m));
+        return null;
+    }
+
+    @Override
     public Void visit(addition a) {
-        sb.append("(");
-        a.a1().accept(this);
+        appendAexp(a.a1(), getPrecedence(a));
         sb.append(" + ");
-        a.a2().accept(this);
-        sb.append(")");
+        appendAexp(a.a2(), getPrecedence(a));
         return null;
     }
 
     @Override
     public Void visit(subtract s) {
-        sb.append("(");
-        s.a1().accept(this);
+        appendAexp(s.a1(), getPrecedence(s));
         sb.append(" - ");
-        s.a2().accept(this);
-        sb.append(")");
-        return null;
-    }
-
-    @Override
-    public Void visit(multiply m) {
-        sb.append("(");
-        m.a1().accept(this);
-        sb.append(" * ");
-        m.a2().accept(this);
-        sb.append(")");
+        appendAexp(s.a2(), getPrecedence(s));
         return null;
     }
 
@@ -152,5 +151,25 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
         sb.append("!");
         n.b().accept(this);
         return null;
+    }
+
+    // ------- HELPERS --------
+
+    private int getPrecedence(Aexp aexp) {
+        if (aexp instanceof Num || aexp instanceof Var) return 99;          // Terminal expressions, never need to be parenthesised
+        if (aexp instanceof multiply) return 1;                             // Higher precedence than + and -
+        if (aexp instanceof addition || aexp instanceof subtract) return 0; // Lowest precedence
+        return -1; 
+    }
+
+    private void appendAexp(Aexp aexp, int parentPrecedence) {
+        int childPrecedence = getPrecedence(aexp);
+        if (childPrecedence < parentPrecedence) {
+            sb.append("(");
+            aexp.accept(this);
+            sb.append(")");
+        } else {
+            aexp.accept(this);
+        }
     }
 }

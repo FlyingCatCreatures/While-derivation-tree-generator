@@ -97,7 +97,7 @@ public class Parser {
                         Token elseToken = consume();
                         if (!elseToken.value().equals("else"))
                             throw new RuntimeException("Expected 'else' after then-branch at position " + pos);
-                        Stm elseStm = parseStm();
+                        Stm elseStm = parseAtomicStm(); // only parse one atomic statement as body
                         stmt = new if_then_else(cond, thenStm, elseStm);
                         break;
                     case "while":
