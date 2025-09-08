@@ -32,19 +32,20 @@ public class Main {
         for(int i=1; i<args.length; i++){
             if (args[i].equals("--pdf-maxwidth")){
                 try{
-                    i++;
+                    i++; // Consume flag
                     Integer.parseInt(args[i]);
+                    // x is automatically consumed in the loop update statement
                 }catch (NumberFormatException e){
                     System.err.println("--pdf-maxwidth must be an integer, but found " + args[2]);
                     System.exit(1);
                 }
                 pdf_maxwidth = args[i] + "cm";
             } else if(args[i].equals("--init-state")){
+                i++; // Consume flag
                 int n = 0;
                 try{
-                    i++;
                     n = Integer.parseInt(args[i]);
-                    i++;
+                    i++; // Consume n
                 }catch (NumberFormatException e){
                     System.err.println("argument 'n' for --init-state must be an integer");
                     System.exit(1);
@@ -59,6 +60,9 @@ public class Main {
                     }
                 }
                 i = i + 2*n - 1; // Skip processed arguments
+            }else{
+                System.err.println("Unknown argument given at position " + i + " . Found: " + args[i]);
+                System.exit(1);
             }
         }
         

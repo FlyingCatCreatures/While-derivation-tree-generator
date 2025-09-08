@@ -1,5 +1,5 @@
-z := 0;
-while y <= x do (
+z := 1;
+while y <= x & !z<=0 do (
     z := z + 1;
     x := x - y
 )

@@ -209,14 +209,14 @@ public class Parser {
                 if(op.type() != TokenType.OP || (!op.value().equals("=") && !op.value().equals("<=")))  throw new RuntimeException("Expected '=' or '<=' after arithmetic expression at position " + pos);
 
                 Aexp a2 = parseAexp();
-                if(op.value().equals("="))  return new equals(a1, a2);
-                else if (op.value().equals("<=")) return new leq(a1, a2);
+                if(op.value().equals("="))  exp = new equals(a1, a2);
+                else if (op.value().equals("<=")) exp = new leq(a1, a2);
                 else throw new RuntimeException("Expected '=' or '<=' after arithmetic expression at position " + pos);
-
+                break;
             default:
                 throw new RuntimeException("Unexpected token " + next.value() + " of type " + next.type() + " at position " + pos);
         }
-
+        
         // Now check for conjunction: b1 & b2
         if (peek().type() == TokenType.OP && peek().value().equals("&")) {
             consume(); // eat &

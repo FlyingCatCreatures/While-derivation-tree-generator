@@ -1,57 +1,58 @@
 % !TEX TS-program = XeLaTeX
 \documentclass[varwidth=100cm]{standalone}
 \usepackage{prooftree}
+\usepackage{amsfonts} % for \mathbb{}
 
 \begin{document}
-For this tree we denote $s_{a,b,c}$ to denote $s[x->a][y->b][z->c]$, where $a,b,c\in \mathBB{N}$\\  
+For this tree we denote $s_{a,b,c}$ to denote $s[x->a][y->b][z->c]$, where $a,b,c\in \mathbb{N}$\\  
 
 \begin{prooftree}
-		\langle z := 0, s_{23,6,\bot} \rangle \rightarrow s_{23,6,0} \ ^{[ass_{ns}]}
+		\langle z := 1, s_{23,6,\bot} \rangle \rightarrow s_{23,6,1} \ ^{[ass_{ns}]}
 	\begin{prooftree}
 		\begin{prooftree}
-				\langle z := (z + 1), s_{23,6,0} \rangle \rightarrow s_{23,6,1} \ ^{[ass_{ns}]}
-				\langle x := (x - y), s_{23,6,1} \rangle \rightarrow s_{17,6,1} \ ^{[ass_{ns}]}
+				\langle z := (z + 1), s_{23,6,1} \rangle \rightarrow s_{23,6,2} \ ^{[ass_{ns}]}
+				\langle x := (x - y), s_{23,6,2} \rangle \rightarrow s_{17,6,2} \ ^{[ass_{ns}]}
 		\justifies
-			\langle (z := (z + 1); x := (x - y)), s_{23,6,0}\rangle \rightarrow s_{17,6,1}
+			\langle (z := (z + 1); x := (x - y)), s_{23,6,1}\rangle \rightarrow s_{17,6,2}
 		\using
 			[comp_{ns}]
 		\end{prooftree}
 		\begin{prooftree}
 			\begin{prooftree}
-					\langle z := (z + 1), s_{17,6,1} \rangle \rightarrow s_{17,6,2} \ ^{[ass_{ns}]}
-					\langle x := (x - y), s_{17,6,2} \rangle \rightarrow s_{11,6,2} \ ^{[ass_{ns}]}
+					\langle z := (z + 1), s_{17,6,2} \rangle \rightarrow s_{17,6,3} \ ^{[ass_{ns}]}
+					\langle x := (x - y), s_{17,6,3} \rangle \rightarrow s_{11,6,3} \ ^{[ass_{ns}]}
 			\justifies
-				\langle (z := (z + 1); x := (x - y)), s_{17,6,1}\rangle \rightarrow s_{11,6,2}
+				\langle (z := (z + 1); x := (x - y)), s_{17,6,2}\rangle \rightarrow s_{11,6,3}
 			\using
 				[comp_{ns}]
 			\end{prooftree}
 			\begin{prooftree}
 				\begin{prooftree}
-						\langle z := (z + 1), s_{11,6,2} \rangle \rightarrow s_{11,6,3} \ ^{[ass_{ns}]}
-						\langle x := (x - y), s_{11,6,3} \rangle \rightarrow s_{5,6,3} \ ^{[ass_{ns}]}
+						\langle z := (z + 1), s_{11,6,3} \rangle \rightarrow s_{11,6,4} \ ^{[ass_{ns}]}
+						\langle x := (x - y), s_{11,6,4} \rangle \rightarrow s_{5,6,4} \ ^{[ass_{ns}]}
 				\justifies
-					\langle (z := (z + 1); x := (x - y)), s_{11,6,2}\rangle \rightarrow s_{5,6,3}
+					\langle (z := (z + 1); x := (x - y)), s_{11,6,3}\rangle \rightarrow s_{5,6,4}
 				\using
 					[comp_{ns}]
 				\end{prooftree}
-					\langle $while $(y <= x)$ do $(z := (z + 1); x := (x - y)), s_{5,6,3} \rangle \rightarrow s_{5,6,3} \ ^{[while_{ns}^{ff}]}
+					\langle $while $((y <= x) \land !(z <= 0))$ do $(z := (z + 1); x := (x - y)), s_{5,6,4} \rangle \rightarrow s_{5,6,4} \ ^{[while_{ns}^{ff}]}
 			\justifies
-				\langle $while $(y <= x)$ do $(z := (z + 1); x := (x - y)), s_{11,6,2}\rangle \rightarrow s_{5,6,3}
+				\langle $while $((y <= x) \land !(z <= 0))$ do $(z := (z + 1); x := (x - y)), s_{11,6,3}\rangle \rightarrow s_{5,6,4}
 			\using
 				[while_{ns}^{tt}]
 			\end{prooftree}
 		\justifies
-			\langle $while $(y <= x)$ do $(z := (z + 1); x := (x - y)), s_{17,6,1}\rangle \rightarrow s_{5,6,3}
+			\langle $while $((y <= x) \land !(z <= 0))$ do $(z := (z + 1); x := (x - y)), s_{17,6,2}\rangle \rightarrow s_{5,6,4}
 		\using
 			[while_{ns}^{tt}]
 		\end{prooftree}
 	\justifies
-		\langle $while $(y <= x)$ do $(z := (z + 1); x := (x - y)), s_{23,6,0}\rangle \rightarrow s_{5,6,3}
+		\langle $while $((y <= x) \land !(z <= 0))$ do $(z := (z + 1); x := (x - y)), s_{23,6,1}\rangle \rightarrow s_{5,6,4}
 	\using
 		[while_{ns}^{tt}]
 	\end{prooftree}
 \justifies
-	\langle (z := 0; $while $(y <= x)$ do $(z := (z + 1); x := (x - y))), s_{23,6,\bot}\rangle \rightarrow s_{5,6,3}
+	\langle (z := 1; $while $((y <= x) \land !(z <= 0))$ do $(z := (z + 1); x := (x - y))), s_{23,6,\bot}\rangle \rightarrow s_{5,6,4}
 \using
 	[comp_{ns}]
 \end{prooftree}

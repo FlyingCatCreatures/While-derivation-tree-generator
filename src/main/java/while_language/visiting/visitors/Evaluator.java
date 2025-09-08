@@ -45,7 +45,7 @@ public class Evaluator implements StmVisitor<Void>, AexpVisitor<Integer>, BexpVi
 
     @Override
     public Boolean visit(negation n) {
-        return !n.accept(this);
+        return !n.b().accept(this);
     }
 
     @Override

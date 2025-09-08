@@ -19,9 +19,10 @@ public class DerivationTree implements StmVisitor<Void> {
             %% !TEX TS-program = XeLaTeX
             \\documentclass[varwidth=%s]{standalone}
             \\usepackage{prooftree}
+            \\usepackage{amsfonts} %s for \\mathbb{}
 
             \\begin{document}
-            """.formatted(varwidth);
+            """.formatted(varwidth, '%');
         sb = new StringBuilder(preamble + makeLegend() + "\\\\  \n\n");
     }
 
@@ -56,7 +57,7 @@ public class DerivationTree implements StmVisitor<Void> {
             first = false;
         }
 
-        return "For this tree we denote $s_{" + vars + "}$ to denote $s[" + mapping + "]$, where $" + vars + "\\in \\mathBB{N}$";
+        return "For this tree we denote $s_{" + vars + "}$ to denote $s[" + mapping + "]$, where $" + vars + "\\in \\mathbb{N}$";
     }
 
     @Override

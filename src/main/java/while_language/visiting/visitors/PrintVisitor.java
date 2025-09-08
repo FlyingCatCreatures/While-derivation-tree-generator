@@ -141,7 +141,7 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
     public Void visit(conjunction c) {
         sb.append("(");
         c.b1().accept(this);
-        sb.append(" ^ ");
+        sb.append(" \\land ");
         c.b2().accept(this);
         sb.append(")");
         return null;
