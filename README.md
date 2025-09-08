@@ -5,13 +5,13 @@ This project generates derivation trees for programs written in a simple While l
 
 ## Language Specification and Grammar
 
-**Note:** This project uses a slightly modified grammar for easier use of ASCII symbols. The changes include:
-
-- The negation operator uses `!` instead of the standard symbol.
-- The less than or equal to operator uses `<=`.
-- The conjunction operator uses `&`.
-- Explicitly allow grouping using parentheses.
-- While not officially a part of the grammar, comments are supported, signified by a %. Multiline comments are not supported though.
+**Note:** This project uses a slightly modified grammar compared to the course itself, such that it is easier to use. Mainly this was replacing characters with more convenient ones, like:
+- The negation operator (`!`).
+- The less than or equal to operator (`<=`).
+- The conjunction operator (`&`).
+Other than that there are two more changes:
+- Grouping of statements using parentheses is made explicit in the grammar rather than being implicit
+- There is a way to comment code by use of the '%' character. There are no multiline comments though. 
 
 Below is the full grammar specification used:
 
