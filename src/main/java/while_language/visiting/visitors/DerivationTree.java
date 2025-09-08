@@ -126,7 +126,7 @@ public class DerivationTree implements StmVisitor<Void> {
         indent();
         appendLine("\\langle " + printer.toString() + ", "+ state_before + "\\rangle \\rightarrow " + str(eval.state));
         dedent();
-         appendLine("\\using");
+        appendLine("\\using");
         indent();
         appendLine("[if_{ns}^" + (cond ? "{tt}":"{ff}") + "]");
         dedent();

@@ -13,7 +13,7 @@ This project generates derivation trees for programs written in a simple While l
 - Explicitly allow grouping using parentheses.
 - While not officially a part of the grammar, comments are supported, signified by a %. Multiline comments are not supported though.
 
-Below is the full specification used:
+Below is the full grammar specification used:
 
 ```
 S ::=   x := a | 
@@ -50,12 +50,9 @@ Where `WHILE_FILE` is the name of a file located in the `input_files` directory.
 --pdf-maxwidth x
 --init-state n var_1 val_1 var_2 val_2 ... var_n val_n
 ```
-Where x, n, and all the val's are integers. The former sets the max width of the eventually produced pdf of the derivation tree, and init-state defines a starting state to execute the program in.
+Where x, n, and all the val's are integers. The former sets the max width of the eventually produced pdf of the derivation tree, and the latter defines a starting state to execute the program in.
 
-You don't need to build the program, as the repository already has an up to date build, but you want to you can by doing:
-```sh
-./gradlew build
-```
+You don't need to build the program just to use it, as the repository already should already have an up to date build. Should you want to you though, you can do so by running `./gradlew build`. This only works if you have a valid Java Development Kit and gradle installed.
 
 ## Important Notes
 
