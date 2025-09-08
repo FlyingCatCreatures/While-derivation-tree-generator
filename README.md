@@ -9,6 +9,7 @@ This project generates derivation trees for programs written in a simple While l
 - The negation operator (`!`).
 - The less than or equal to operator (`<=`).
 - The conjunction operator (`&`).
+
 Other than that there are two more changes:
 - Grouping of statements using parentheses is made explicit in the grammar rather than being implicit
 - There is a way to comment code by use of the '%' character. There are no multiline comments though. 
