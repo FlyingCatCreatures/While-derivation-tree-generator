@@ -1,4 +1,3 @@
-out/*
 .gradle/
 build/distributions
 build/generated
@@ -8,5 +7,4 @@ build/resources
 build/scripts
 build/test-results
 build/tmp
-bin/
-profile.jfr
+loc
