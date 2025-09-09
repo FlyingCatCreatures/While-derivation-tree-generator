@@ -14,6 +14,7 @@ For this tree we denote $s_{a,b}$ to denote $s[n->a][r->b]$, where $a,b\in \math
 				\langle n := n - 1, s_{10,10} \rangle \rightarrow s_{9,10} \ ^{[ass_{ns}]}
 		\justifies
 			\langle r := r * n; n := n - 1, s_{10,1}\rangle \rightarrow s_{9,10}
+		\thickness = 0.1 em
 		\using
 			[comp_{ns}]
 		\end{prooftree}
@@ -23,6 +24,7 @@ For this tree we denote $s_{a,b}$ to denote $s[n->a][r->b]$, where $a,b\in \math
 					\langle n := n - 1, s_{9,90} \rangle \rightarrow s_{8,90} \ ^{[ass_{ns}]}
 			\justifies
 				\langle r := r * n; n := n - 1, s_{9,10}\rangle \rightarrow s_{8,90}
+			\thickness = 0.1 em
 			\using
 				[comp_{ns}]
 			\end{prooftree}
@@ -32,6 +34,7 @@ For this tree we denote $s_{a,b}$ to denote $s[n->a][r->b]$, where $a,b\in \math
 						\langle n := n - 1, s_{8,720} \rangle \rightarrow s_{7,720} \ ^{[ass_{ns}]}
 				\justifies
 					\langle r := r * n; n := n - 1, s_{8,90}\rangle \rightarrow s_{7,720}
+				\thickness = 0.1 em
 				\using
 					[comp_{ns}]
 				\end{prooftree}
@@ -41,6 +44,7 @@ For this tree we denote $s_{a,b}$ to denote $s[n->a][r->b]$, where $a,b\in \math
 							\langle n := n - 1, s_{7,5040} \rangle \rightarrow s_{6,5040} \ ^{[ass_{ns}]}
 					\justifies
 						\langle r := r * n; n := n - 1, s_{7,720}\rangle \rightarrow s_{6,5040}
+					\thickness = 0.1 em
 					\using
 						[comp_{ns}]
 					\end{prooftree}
@@ -50,6 +54,7 @@ For this tree we denote $s_{a,b}$ to denote $s[n->a][r->b]$, where $a,b\in \math
 								\langle n := n - 1, s_{6,30240} \rangle \rightarrow s_{5,30240} \ ^{[ass_{ns}]}
 						\justifies
 							\langle r := r * n; n := n - 1, s_{6,5040}\rangle \rightarrow s_{5,30240}
+						\thickness = 0.1 em
 						\using
 							[comp_{ns}]
 						\end{prooftree}
@@ -59,6 +64,7 @@ For this tree we denote $s_{a,b}$ to denote $s[n->a][r->b]$, where $a,b\in \math
 									\langle n := n - 1, s_{5,151200} \rangle \rightarrow s_{4,151200} \ ^{[ass_{ns}]}
 							\justifies
 								\langle r := r * n; n := n - 1, s_{5,30240}\rangle \rightarrow s_{4,151200}
+							\thickness = 0.1 em
 							\using
 								[comp_{ns}]
 							\end{prooftree}
@@ -68,6 +74,7 @@ For this tree we denote $s_{a,b}$ to denote $s[n->a][r->b]$, where $a,b\in \math
 										\langle n := n - 1, s_{4,604800} \rangle \rightarrow s_{3,604800} \ ^{[ass_{ns}]}
 								\justifies
 									\langle r := r * n; n := n - 1, s_{4,151200}\rangle \rightarrow s_{3,604800}
+								\thickness = 0.1 em
 								\using
 									[comp_{ns}]
 								\end{prooftree}
@@ -77,6 +84,7 @@ For this tree we denote $s_{a,b}$ to denote $s[n->a][r->b]$, where $a,b\in \math
 											\langle n := n - 1, s_{3,1814400} \rangle \rightarrow s_{2,1814400} \ ^{[ass_{ns}]}
 									\justifies
 										\langle r := r * n; n := n - 1, s_{3,604800}\rangle \rightarrow s_{2,1814400}
+									\thickness = 0.1 em
 									\using
 										[comp_{ns}]
 									\end{prooftree}
@@ -86,6 +94,7 @@ For this tree we denote $s_{a,b}$ to denote $s[n->a][r->b]$, where $a,b\in \math
 												\langle n := n - 1, s_{2,3628800} \rangle \rightarrow s_{1,3628800} \ ^{[ass_{ns}]}
 										\justifies
 											\langle r := r * n; n := n - 1, s_{2,1814400}\rangle \rightarrow s_{1,3628800}
+										\thickness = 0.1 em
 										\using
 											[comp_{ns}]
 										\end{prooftree}
@@ -95,62 +104,74 @@ For this tree we denote $s_{a,b}$ to denote $s[n->a][r->b]$, where $a,b\in \math
 													\langle n := n - 1, s_{1,3628800} \rangle \rightarrow s_{0,3628800} \ ^{[ass_{ns}]}
 											\justifies
 												\langle r := r * n; n := n - 1, s_{1,3628800}\rangle \rightarrow s_{0,3628800}
+											\thickness = 0.1 em
 											\using
 												[comp_{ns}]
 											\end{prooftree}
 												\langle $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{0,3628800} \rangle \rightarrow s_{0,3628800} \ ^{[while_{ns}^{ff}]}
 										\justifies
 											\langle $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{1,3628800}\rangle \rightarrow s_{0,3628800}
+										\thickness = 0.1 em
 										\using
 											[while_{ns}^{tt}]
 										\end{prooftree}
 									\justifies
 										\langle $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{2,1814400}\rangle \rightarrow s_{0,3628800}
+									\thickness = 0.1 em
 									\using
 										[while_{ns}^{tt}]
 									\end{prooftree}
 								\justifies
 									\langle $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{3,604800}\rangle \rightarrow s_{0,3628800}
+								\thickness = 0.1 em
 								\using
 									[while_{ns}^{tt}]
 								\end{prooftree}
 							\justifies
 								\langle $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{4,151200}\rangle \rightarrow s_{0,3628800}
+							\thickness = 0.1 em
 							\using
 								[while_{ns}^{tt}]
 							\end{prooftree}
 						\justifies
 							\langle $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{5,30240}\rangle \rightarrow s_{0,3628800}
+						\thickness = 0.1 em
 						\using
 							[while_{ns}^{tt}]
 						\end{prooftree}
 					\justifies
 						\langle $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{6,5040}\rangle \rightarrow s_{0,3628800}
+					\thickness = 0.1 em
 					\using
 						[while_{ns}^{tt}]
 					\end{prooftree}
 				\justifies
 					\langle $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{7,720}\rangle \rightarrow s_{0,3628800}
+				\thickness = 0.1 em
 				\using
 					[while_{ns}^{tt}]
 				\end{prooftree}
 			\justifies
 				\langle $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{8,90}\rangle \rightarrow s_{0,3628800}
+			\thickness = 0.1 em
 			\using
 				[while_{ns}^{tt}]
 			\end{prooftree}
 		\justifies
 			\langle $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{9,10}\rangle \rightarrow s_{0,3628800}
+		\thickness = 0.1 em
 		\using
 			[while_{ns}^{tt}]
 		\end{prooftree}
 	\justifies
 		\langle $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{10,1}\rangle \rightarrow s_{0,3628800}
+	\thickness = 0.1 em
 	\using
 		[while_{ns}^{tt}]
 	\end{prooftree}
 \justifies
 	\langle r := 1; $while $!n <= 0$ do $(r := r * n; n := n - 1), s_{10,\bot}\rangle \rightarrow s_{0,3628800}
+\thickness = 0.1 em
 \using
 	[comp_{ns}]
 \end{prooftree}

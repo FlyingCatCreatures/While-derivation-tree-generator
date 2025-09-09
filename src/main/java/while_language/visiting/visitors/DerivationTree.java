@@ -126,6 +126,7 @@ public class DerivationTree implements StmVisitor<Void> {
         indent();
         appendLine("\\langle " + printer.toString() + ", "+ state_before + "\\rangle \\rightarrow " + str(eval.state));
         dedent();
+        appendLine("\\thickness = 0.1 em");
         appendLine("\\using");
         indent();
         appendLine("[if_{ns}^" + (cond ? "{tt}":"{ff}") + "]");
@@ -157,7 +158,8 @@ public class DerivationTree implements StmVisitor<Void> {
         indent();
         appendLine("\\langle " + printer.toString() + ", "+ originalState + "\\rangle \\rightarrow " + str(eval.state));
         dedent();
-         appendLine("\\using");
+        appendLine("\\thickness = 0.1 em");
+        appendLine("\\using");
         indent();
         appendLine("[while_{ns}^{tt}]");
         dedent();
@@ -182,7 +184,8 @@ public class DerivationTree implements StmVisitor<Void> {
         indent();
         appendLine("\\langle " + printer.toString() + ", "+ state_before + "\\rangle \\rightarrow " + str(eval.state));
         dedent();
-         appendLine("\\using");
+        appendLine("\\thickness = 0.1 em");
+        appendLine("\\using");
         indent();
         appendLine("[comp_{ns}]");
         dedent();
