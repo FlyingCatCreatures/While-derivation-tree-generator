@@ -35,6 +35,13 @@ public class SyntaxTreePrintVisitor implements StmVisitor<Void>, AexpVisitor<Voi
     }
 
     @Override
+    public Void visit(Continue c) {
+        printIndent();
+        sb.append("continue\n");
+        return null;
+    }
+
+    @Override
     public Void visit(assign a) {
         printIndent();
         sb.append("assign\n");

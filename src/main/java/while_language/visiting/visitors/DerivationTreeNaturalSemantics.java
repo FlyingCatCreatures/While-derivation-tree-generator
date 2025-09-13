@@ -111,7 +111,11 @@ public class DerivationTreeNaturalSemantics implements StmVisitor<Void> {
     }
 
     public Void visit(Break b) {
-        throw new IllegalStateException("In natural semantics no breaks are allowed.");
+        throw new IllegalStateException("In natural semantics no break statements are allowed.");
+    }  
+    
+    public Void visit(Continue c) {
+        throw new IllegalStateException("In natural semantics no continue statements are allowed.");
     }  
 
     public Void visit(if_then_else ite){

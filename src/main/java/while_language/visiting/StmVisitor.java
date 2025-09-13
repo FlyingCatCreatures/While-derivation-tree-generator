@@ -1,6 +1,7 @@
 package while_language.visiting;
 
 import while_language.Syntax.stm.Break;
+import while_language.Syntax.stm.Continue;
 import while_language.Syntax.stm.assign;
 import while_language.Syntax.stm.compound;
 import while_language.Syntax.stm.if_then_else;
@@ -16,4 +17,5 @@ public interface StmVisitor<R> {
     R visit(compound c);
     R visit(repeat_until ru);
     R visit(Break b);
+    R visit(Continue c);
 }

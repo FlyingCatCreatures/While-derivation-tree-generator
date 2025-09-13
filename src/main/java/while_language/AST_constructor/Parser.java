@@ -16,6 +16,7 @@ import while_language.Syntax.bexp.negation;
 import while_language.Syntax.bexp.equals;
 import while_language.Syntax.bexp.leq;
 import while_language.Syntax.stm.Break;
+import while_language.Syntax.stm.Continue;
 import while_language.Syntax.stm.Stm;
 import while_language.Syntax.stm.assign;
 import while_language.Syntax.stm.compound;
@@ -93,6 +94,9 @@ public class Parser {
                         break;
                     case "break":
                         stmt = new Break();
+                        break;
+                    case "continue":
+                        stmt = new Continue();
                         break;
                     case "if":
                         Bexp cond = parseBexp();

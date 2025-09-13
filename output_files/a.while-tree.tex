@@ -4,50 +4,97 @@
 \usepackage{amsfonts} % for \mathbb{}
 
 \begin{document}
-For this tree we denote $s_{a}$ to denote $s[x\mapsto a]$, where $a\in \mathbb{N}$\\  
+For this tree we denote $s_{a,b}$ to denote $s[x\mapsto a][y\mapsto b]$, where $a,b\in \mathbb{N}$\\  
 
 \begin{prooftree}
 	\begin{prooftree}
-			\langle x := x + 1, s_{1} \rangle \rightarrow (s_{2}, \circ) \ ^{[ass]}
 		\begin{prooftree}
-				\langle $skip$, s_{2} \rangle \rightarrow (s_{2}, \circ) \ ^{[skip]}
-		\justifies
-			\langle $if $x = 3$ then $$break$$ else $$skip$, s_{2} \rangle \rightarrow (s_{2}, \circ)
-		\thickness = 0.1 em
-		\using
-			[if^{ff}]
-		\end{prooftree}
-	\justifies
-		\langle x := x + 1; $if $x = 3$ then $$break$$ else $$skip$, s_{1} \rangle \rightarrow (s_{2}, \circ)
-	\thickness = 0.1 em
-	\using
-		[comp^{\circ}]
-	\end{prooftree}
-	\begin{prooftree}
-		\begin{prooftree}
-				\langle x := x + 1, s_{2} \rangle \rightarrow (s_{3}, \circ) \ ^{[ass]}
+				\langle x := x + 1, s_{0,0} \rangle \rightarrow (s_{1,0}, \circ) \ ^{[ass]}
 			\begin{prooftree}
-					\langle $break$, s_{3} \rangle \rightarrow (s_{3}, \bullet) \ ^{[skip]}
+					\langle $continue$, s_{1,0} \rangle \rightarrow (s_{1,0}, \circ) \ ^{[continue]}
 			\justifies
-				\langle $if $x = 3$ then $$break$$ else $$skip$, s_{3} \rangle \rightarrow (s_{3}, \bullet)
+				\langle $if $x = 3$ then $$break$$ else $$continue$, s_{1,0} \rangle \rightarrow (s_{1,0}, \circ)
 			\thickness = 0.1 em
 			\using
-				[if^{tt}]
+				[if^{ff}]
 			\end{prooftree}
 		\justifies
-			\langle x := x + 1; $if $x = 3$ then $$break$$ else $$skip$, s_{2} \rangle \rightarrow (s_{3}, \bullet)
+			\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$, s_{0,0} \rangle \rightarrow (s_{1,0}, \circ)
 		\thickness = 0.1 em
 		\using
 			[comp^{\circ}]
 		\end{prooftree}
+		aaah
 	\justifies
-		\langle $while $x <= 5$ do $(x := x + 1; $if $x = 3$ then $$break$$ else $$skip$), s_{2} \rangle \rightarrow (s_{3}, \circ)
+		\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$; y := y + 1, s_{0,0} \rangle \rightarrow (s_{1,0}, \circ)
 	\thickness = 0.1 em
 	\using
-		[while^{tt\bullet}]
+		[comp^{\triangle}]
+	\end{prooftree}
+	\begin{prooftree}
+		\begin{prooftree}
+			\begin{prooftree}
+					\langle x := x + 1, s_{1,0} \rangle \rightarrow (s_{2,0}, \circ) \ ^{[ass]}
+				\begin{prooftree}
+						\langle $continue$, s_{2,0} \rangle \rightarrow (s_{2,0}, \circ) \ ^{[continue]}
+				\justifies
+					\langle $if $x = 3$ then $$break$$ else $$continue$, s_{2,0} \rangle \rightarrow (s_{2,0}, \circ)
+				\thickness = 0.1 em
+				\using
+					[if^{ff}]
+				\end{prooftree}
+			\justifies
+				\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$, s_{1,0} \rangle \rightarrow (s_{2,0}, \circ)
+			\thickness = 0.1 em
+			\using
+				[comp^{\circ}]
+			\end{prooftree}
+			aaah
+		\justifies
+			\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$; y := y + 1, s_{1,0} \rangle \rightarrow (s_{2,0}, \circ)
+		\thickness = 0.1 em
+		\using
+			[comp^{\triangle}]
+		\end{prooftree}
+		\begin{prooftree}
+			\begin{prooftree}
+				\begin{prooftree}
+						\langle x := x + 1, s_{2,0} \rangle \rightarrow (s_{3,0}, \circ) \ ^{[ass]}
+					\begin{prooftree}
+							\langle $break$, s_{3,0} \rangle \rightarrow (s_{3,0}, \bullet) \ ^{[break]}
+					\justifies
+						\langle $if $x = 3$ then $$break$$ else $$continue$, s_{3,0} \rangle \rightarrow (s_{3,0}, \bullet)
+					\thickness = 0.1 em
+					\using
+						[if^{tt}]
+					\end{prooftree}
+				\justifies
+					\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$, s_{2,0} \rangle \rightarrow (s_{3,0}, \bullet)
+				\thickness = 0.1 em
+				\using
+					[comp^{\circ}]
+				\end{prooftree}
+				aaah
+			\justifies
+				\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$; y := y + 1, s_{2,0} \rangle \rightarrow (s_{3,0}, \bullet)
+			\thickness = 0.1 em
+			\using
+				[comp^{\bullet}]
+			\end{prooftree}
+		\justifies
+			\langle $while $x <= 5$ do $(x := x + 1; $if $x = 3$ then $$break$$ else $$continue$; y := y + 1), s_{2,0} \rangle \rightarrow (s_{3,0}, \circ)
+		\thickness = 0.1 em
+		\using
+			[while^{tt\bullet}]
+		\end{prooftree}
+	\justifies
+		\langle $while $x <= 5$ do $(x := x + 1; $if $x = 3$ then $$break$$ else $$continue$; y := y + 1), s_{1,0} \rangle \rightarrow (s_{3,0}, \circ)
+	\thickness = 0.1 em
+	\using
+		[while^{tt\circ}]
 	\end{prooftree}
 \justifies
-	\langle $while $x <= 5$ do $(x := x + 1; $if $x = 3$ then $$break$$ else $$skip$), s_{1} \rangle \rightarrow (s_{3}, \circ)
+	\langle $while $x <= 5$ do $(x := x + 1; $if $x = 3$ then $$break$$ else $$continue$; y := y + 1), s_{0,0} \rangle \rightarrow (s_{3,0}, \circ)
 \thickness = 0.1 em
 \using
 	[while^{tt\circ}]

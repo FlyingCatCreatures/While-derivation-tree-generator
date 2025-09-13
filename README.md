@@ -24,6 +24,7 @@ S ::=   x := a |
 	while b do S |
     repeat S until b |
     break |
+    continue |
 	(S)
 a ::=   n | 
 	x | 
@@ -65,6 +66,6 @@ You don't need to build the program just to use it, as the repository already sh
 
 - **Syntax Feedback:** The feedback for incorrect syntax is currently not very helpful. The program simply throws an exception and exits. I might improve this in the future.
 - **Bugs:** There may definitely be bugs in the program. If you encounter any issues, please report them and include the input file you used to help with debugging.
-- **Planned improvements** I plan to add support for continue statements aswell, and possibly also try-catch and throw.
+- **Planned improvements** I plan to potentially add support for try-catch and throw statements.
 
 

@@ -1,9 +1,3 @@
-while true do (
-    x := 0;
-    break;
-    x := 1
-);
-
 repeat (
     y := 0;
     break;

@@ -15,6 +15,7 @@ import while_language.Syntax.bexp.leq;
 import while_language.Syntax.bexp.negation;
 import while_language.Syntax.bexp.equals;
 import while_language.Syntax.stm.Break;
+import while_language.Syntax.stm.Continue;
 import while_language.Syntax.stm.assign;
 import while_language.Syntax.stm.compound;
 import while_language.Syntax.stm.if_then_else;
@@ -97,17 +98,22 @@ public class Evaluator implements StmVisitor<BreakStatus>, AexpVisitor<Integer>,
     @Override
     public BreakStatus visit(assign a) {
         state.put(a.x().x(), a.a().accept(this));
-        return BreakStatus.NO_BREAK;
+        return BreakStatus.NONE;
     }
 
     @Override
     public BreakStatus visit(skip s) {
-        return BreakStatus.NO_BREAK;
+        return BreakStatus.NONE;
     }
 
     @Override
     public BreakStatus visit(Break b) {
-        return BreakStatus.BREAK_ENCOUNTERED;
+        return BreakStatus.BREAK;
+    }
+        
+    @Override
+    public BreakStatus visit(Continue c) {
+        return BreakStatus.CONTINUE;
     }
 
     @Override
@@ -121,8 +127,12 @@ public class Evaluator implements StmVisitor<BreakStatus>, AexpVisitor<Integer>,
 
     @Override
     public BreakStatus visit(compound c) {
-        if(c.s1().accept(this)==BreakStatus.BREAK_ENCOUNTERED) return BreakStatus.BREAK_ENCOUNTERED;
-        return c.s2().accept(this);
+        switch(c.s1().accept(this)){
+            case NONE: return c.s2().accept(this);
+            case CONTINUE: return BreakStatus.CONTINUE;
+            case BREAK: return BreakStatus.BREAK;
+            default: throw new IllegalStateException("Unreachable");
+        }
     }
     
     @Override
@@ -130,9 +140,9 @@ public class Evaluator implements StmVisitor<BreakStatus>, AexpVisitor<Integer>,
         // By definition this would have to be recursive but of course a while loop is equivalent
         // And a stackoverflow is not our goal, so we do that
         while( w.b().accept(this)){
-            if(w.s().accept(this)==BreakStatus.BREAK_ENCOUNTERED) break;
+            if(w.s().accept(this)==BreakStatus.BREAK) break;
         }
-        return BreakStatus.NO_BREAK;
+        return BreakStatus.NONE;
     }
 
     @Override
@@ -140,9 +150,9 @@ public class Evaluator implements StmVisitor<BreakStatus>, AexpVisitor<Integer>,
         // By definition this would have to be recursive but of course a do-while loop with the condition swapped is equivalent
         // And a stackoverflow is not our goal, so we do that
         do{
-            if(ru.s().accept(this)==BreakStatus.BREAK_ENCOUNTERED) break;
+            if(ru.s().accept(this)==BreakStatus.BREAK) break;
         }
         while(!ru.b().accept(this));
-        return BreakStatus.NO_BREAK;
+        return BreakStatus.NONE;
     }
 }
