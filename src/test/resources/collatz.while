@@ -1,0 +1,33 @@
+% Collatz conjecture simulation, for a single input value
+
+steps := 0;
+while !(x = 1) do
+(
+    steps := steps + 1;
+
+    % Check if x is even
+    parity := x;
+    while !(parity <= 1) do
+    (
+        parity := parity - 2
+    );
+
+
+    % if x is even
+    if parity = 0 then
+    (
+        % we need to divide by 2, but we have no division, so we do it like this
+        q := 0; r := x;
+        while !(r = 0) & !(r = 1) do
+        (
+            r := r - 2;
+            q := q + 1
+        );
+        x := q
+    )
+    else
+    (
+        % x is odd, so just 3x+1
+        x := (3 * x) + 1
+    )
+)

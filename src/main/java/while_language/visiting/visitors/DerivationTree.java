@@ -172,9 +172,6 @@ public class DerivationTree implements StmVisitor<Void> {
         PrintVisitor printer = new PrintVisitor();
         c.accept(printer);
 
-
-        String originalState = str(eval.state); 
-
         appendLine("\\begin{prooftree}");
         indent();
         c.s1().accept(this);

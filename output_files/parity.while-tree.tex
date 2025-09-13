@@ -1,0 +1,34 @@
+% !TEX TS-program = XeLaTeX
+\documentclass[varwidth=100cm]{standalone}
+\usepackage{prooftree}
+\usepackage{amsfonts} % for \mathbb{}
+
+\begin{document}
+For this tree we denote $s_{a,b}$ to denote $s[x->a][y->b]$, where $a,b\in \mathbb{N}$\\  
+
+\begin{prooftree}
+		\langle y := x, s_{5,\bot} \rangle \rightarrow s_{5,5} \ ^{[ass_{ns}]}
+	\begin{prooftree}
+			\langle y := y - 2, s_{5,5} \rangle \rightarrow s_{5,3} \ ^{[ass_{ns}]}
+		\begin{prooftree}
+				\langle y := y - 2, s_{5,3} \rangle \rightarrow s_{5,1} \ ^{[ass_{ns}]}
+				\langle $while $\neg y <= 1$ do $y := y - 2, s_{5,1} \rangle \rightarrow s_{5,1} \ ^{[while_{ns}^{ff}]}
+		\justifies
+			\langle $while $\neg y <= 1$ do $y := y - 2, s_{5,3}\rangle \rightarrow s_{5,1}
+		\thickness = 0.1 em
+		\using
+			[while_{ns}^{tt}]
+		\end{prooftree}
+	\justifies
+		\langle $while $\neg y <= 1$ do $y := y - 2, s_{5,5}\rangle \rightarrow s_{5,1}
+	\thickness = 0.1 em
+	\using
+		[while_{ns}^{tt}]
+	\end{prooftree}
+\justifies
+	\langle y := x; $while $\neg y <= 1$ do $y := y - 2, s_{5,\bot}\rangle \rightarrow s_{5,1}
+\thickness = 0.1 em
+\using
+	[comp_{ns}]
+\end{prooftree}
+\end{document}

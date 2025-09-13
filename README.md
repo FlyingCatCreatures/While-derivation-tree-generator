@@ -53,7 +53,7 @@ Where `WHILE_FILE` is the name of a file located in the `input_files` directory.
 ```
 Where x, n, and all the val's are integers. The former sets the max width of the eventually produced pdf of the derivation tree, and the latter defines a starting state to execute the program in.
 
-You don't need to build the program just to use it, as the repository already should already have an up to date build. Should you want to you though, you can do so by running `./gradlew build`. This only works if you have a valid Java Development Kit and gradle installed. In this case you can also run `./gradlew test`.
+You don't need to build the program just to use it, as the repository already should already have an up to date build. Should you want to you though, you can do so by running `./gradlew build`. This only works if you have a valid Java Development Kit and gradle installed. Doing this also runs the tests in `src/test`.
 
 ## Important Notes
 

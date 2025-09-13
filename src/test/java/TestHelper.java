@@ -35,4 +35,26 @@ public class TestHelper {
     public static void assertFinalState(String filename, Map<String, Integer> expectedState) throws Exception {
         assertFinalState(filename, Map.of(), expectedState);
     }
+
+    public static Map<String, Integer> eval(String filename, Map<String, Integer> initState) throws Exception {
+        // Load file from test/resources
+        Path filePath = Path.of("src/test/resources/" + filename);
+        String input = Files.readString(filePath);
+
+        // Tokenize and parse
+        Tokenizer tokenizer = new Tokenizer(input);
+        List<Token> tokens = tokenizer.tokenize();
+        Parser parser = new Parser(tokens);
+        Stm ast = parser.generateAST();
+
+        // Evaluate
+        Evaluator evaluator = new Evaluator(new HashMap<>(initState));
+        ast.accept(evaluator);
+
+        return evaluator.state;
+    }
+
+    public static Map<String, Integer> eval(String filename) throws Exception {
+        return eval(filename, Map.of());
+    }
 }

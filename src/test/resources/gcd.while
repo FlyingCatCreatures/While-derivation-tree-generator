@@ -1,0 +1,9 @@
+while !(b = 0) do (
+    temp := b;
+    r := a;
+    while !(r <= b & !(r = b)) do (
+        r := r - b
+    );
+    b := r;
+    a := temp
+)

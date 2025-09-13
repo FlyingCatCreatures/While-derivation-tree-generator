@@ -16,6 +16,12 @@ public class basicTests {
         TestHelper.assertFinalState("assignment.while", init, expected);
     }
 
+    @Test 
+    void testLongVarNames() throws Exception {
+        Map<String, Integer> expected = Map.of("ThisIsALongVariable", 2, "ThisIsAnotherLongVariable", 3);
+        TestHelper.assertFinalState("longVarNames.while", expected);
+    }
+    
     @Test
     void testCompound() throws Exception {
         Map<String, Integer> expected = Map.of("x", 0, "a", 1, "b", 2);
