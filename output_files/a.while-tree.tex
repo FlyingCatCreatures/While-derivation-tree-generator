@@ -11,22 +11,21 @@ For this tree we denote $s_{a,b}$ to denote $s[x\mapsto a][y\mapsto b]$, where $
 		\begin{prooftree}
 				\langle x := x + 1, s_{0,0} \rangle \rightarrow (s_{1,0}, \circ) \ ^{[ass]}
 			\begin{prooftree}
-					\langle $continue$, s_{1,0} \rangle \rightarrow (s_{1,0}, \circ) \ ^{[continue]}
+					\langle $continue$, s_{1,0} \rangle \rightarrow (s_{1,0}, \triangle) \ ^{[continue]}
 			\justifies
-				\langle $if $x = 3$ then $$break$$ else $$continue$, s_{1,0} \rangle \rightarrow (s_{1,0}, \circ)
+				\langle $if $x = 3$ then $$break$$ else $$continue$, s_{1,0} \rangle \rightarrow (s_{1,0}, \triangle)
 			\thickness = 0.1 em
 			\using
 				[if^{ff}]
 			\end{prooftree}
 		\justifies
-			\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$, s_{0,0} \rangle \rightarrow (s_{1,0}, \circ)
+			\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$, s_{0,0} \rangle \rightarrow (s_{1,0}, \triangle)
 		\thickness = 0.1 em
 		\using
-			[comp^{\circ}]
+			[comp^{\triangle}]
 		\end{prooftree}
-		aaah
 	\justifies
-		\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$; y := y + 1, s_{0,0} \rangle \rightarrow (s_{1,0}, \circ)
+		\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$; y := y + 1, s_{0,0} \rangle \rightarrow (s_{1,0}, \triangle)
 	\thickness = 0.1 em
 	\using
 		[comp^{\triangle}]
@@ -36,22 +35,21 @@ For this tree we denote $s_{a,b}$ to denote $s[x\mapsto a][y\mapsto b]$, where $
 			\begin{prooftree}
 					\langle x := x + 1, s_{1,0} \rangle \rightarrow (s_{2,0}, \circ) \ ^{[ass]}
 				\begin{prooftree}
-						\langle $continue$, s_{2,0} \rangle \rightarrow (s_{2,0}, \circ) \ ^{[continue]}
+						\langle $continue$, s_{2,0} \rangle \rightarrow (s_{2,0}, \triangle) \ ^{[continue]}
 				\justifies
-					\langle $if $x = 3$ then $$break$$ else $$continue$, s_{2,0} \rangle \rightarrow (s_{2,0}, \circ)
+					\langle $if $x = 3$ then $$break$$ else $$continue$, s_{2,0} \rangle \rightarrow (s_{2,0}, \triangle)
 				\thickness = 0.1 em
 				\using
 					[if^{ff}]
 				\end{prooftree}
 			\justifies
-				\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$, s_{1,0} \rangle \rightarrow (s_{2,0}, \circ)
+				\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$, s_{1,0} \rangle \rightarrow (s_{2,0}, \triangle)
 			\thickness = 0.1 em
 			\using
-				[comp^{\circ}]
+				[comp^{\triangle}]
 			\end{prooftree}
-			aaah
 		\justifies
-			\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$; y := y + 1, s_{1,0} \rangle \rightarrow (s_{2,0}, \circ)
+			\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$; y := y + 1, s_{1,0} \rangle \rightarrow (s_{2,0}, \triangle)
 		\thickness = 0.1 em
 		\using
 			[comp^{\triangle}]
@@ -72,9 +70,8 @@ For this tree we denote $s_{a,b}$ to denote $s[x\mapsto a][y\mapsto b]$, where $
 					\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$, s_{2,0} \rangle \rightarrow (s_{3,0}, \bullet)
 				\thickness = 0.1 em
 				\using
-					[comp^{\circ}]
+					[comp^{\bullet}]
 				\end{prooftree}
-				aaah
 			\justifies
 				\langle x := x + 1; $if $x = 3$ then $$break$$ else $$continue$; y := y + 1, s_{2,0} \rangle \rightarrow (s_{3,0}, \bullet)
 			\thickness = 0.1 em

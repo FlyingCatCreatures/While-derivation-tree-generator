@@ -34,12 +34,20 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
         sb.append("\t".repeat(indent)).append(line).append("\n");
     }
     
+    private static String marker(BreakStatus b) {
+        return switch (b) {
+            case NONE -> "\\circ";
+            case BREAK -> "\\bullet";
+            case CONTINUE -> "\\triangle";
+        };
+    }
+    
     private void appendStep(Stm stm, String originalState, BreakStatus breakStatus, String rule) {
         PrintVisitor printer = new PrintVisitor();
         stm.accept(printer);
         indent();
         appendLine("\\langle %s, %s \\rangle \\rightarrow (%s, %s) \\ ^{%s}".formatted(
-            printer.toString(), originalState, str(eval.state), breakStatus ==BreakStatus.BREAK ? "\\bullet" : "\\circ", rule
+            printer.toString(), originalState, str(eval.state), marker(breakStatus), rule
         ));
         dedent();
     }
@@ -49,7 +57,7 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
         stm.accept(printer);
         indent();
         appendLine("\\langle %s, %s \\rangle \\rightarrow (%s, %s)".formatted(
-            printer.toString(), originalState, str(eval.state), breakStatus ==BreakStatus.BREAK ? "\\bullet" : "\\circ"
+            printer.toString(), originalState, str(eval.state), marker(breakStatus)
         ));
         dedent();
     }
@@ -161,32 +169,23 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
         appendLine("\\begin{prooftree}");
         indent();
         BreakStatus b1 = c.s1().accept(this);
+        BreakStatus retStatus = b1; // The one we are going to continue with
         if(b1 == BreakStatus.NONE){
-            // Only execute s2 if no break was encountered in s1
-            BreakStatus b2 = c.s2().accept(this);
-            dedent();
-            appendLine("\\justifies");
-            appendStep(c, state_before, b2);
-            appendLine("\\thickness = 0.1 em");
-            appendLine("\\using");
-            indent();
-            appendLine("[comp^{\\circ}]");
-            dedent();
-            appendLine("\\end{prooftree}");
-            return b2;
+            // If no break was encountered we go on with the second statement
+            retStatus = c.s2().accept(this);
         }
         
         // if a break or continue was encountered in s1 we skip s2
         dedent();
         appendLine("\\justifies");
-        appendStep(c, state_before, b1);
+        appendStep(c, state_before, retStatus);
         appendLine("\\thickness = 0.1 em");
         appendLine("\\using");
         indent();
-        appendLine("[comp^{%s}]".formatted(b1 == BreakStatus.BREAK ? "\\bullet" : "\\triangle"));
+        appendLine("[comp^{%s}]".formatted(marker(retStatus)));
         dedent();
         appendLine("\\end{prooftree}");
-        return b1;
+        return retStatus;
     }
 
     public BreakStatus visit(while_do wd){
