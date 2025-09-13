@@ -4,34 +4,15 @@
 \usepackage{amsfonts} % for \mathbb{}
 
 \begin{document}
-For this tree we denote $s_{a,b}$ to denote $s[x->a][z->b]$, where $a,b\in \mathbb{N}$\\  
+For this tree we denote $s_{a}$ to denote $s[x->a]$, where $a\in \mathbb{N}$\\  
 
 \begin{prooftree}
-	\begin{prooftree}
-		\begin{prooftree}
-				\langle z := ((1 + 1) * 2 + 3) * 4 + 5 * 6 + 7, s_{\bot,\bot} \rangle \rightarrow s_{\bot,65} \ ^{[ass_{ns}]}
-				\langle x := 1, s_{\bot,65} \rangle \rightarrow s_{1,65} \ ^{[ass_{ns}]}
-		\justifies
-			\langle z := ((1 + 1) * 2 + 3) * 4 + 5 * 6 + 7; x := 1, s_{\bot,\bot}\rangle \rightarrow s_{1,65}
-		\using
-			[comp_{ns}]
-		\end{prooftree}
-		\begin{prooftree}
-				\langle skip, s_{1,65} \rangle \rightarrow s_{1,65} \ ^{[skip_{ns}]}
-		\justifies
-			\langle $if $z <= x \land !(x <= z \land z <= x)$ then $x := 0$ else $$skip$, s_{1,65}\rangle \rightarrow s_{1,65}
-		\using
-			[if_{ns}^{ff}]
-		\end{prooftree}
-	\justifies
-		\langle z := ((1 + 1) * 2 + 3) * 4 + 5 * 6 + 7; x := 1; $if $z <= x \land !(x <= z \land z <= x)$ then $x := 0$ else $$skip$, s_{\bot,\bot}\rangle \rightarrow s_{1,65}
-	\using
-		[comp_{ns}]
-	\end{prooftree}
-		\langle $while $$false$$ do $(x := x + 1; x := x - 1), s_{1,65} \rangle \rightarrow s_{1,65} \ ^{[while_{ns}^{ff}]}
+		\langle x := x - 1, s_{3} \rangle \rightarrow s_{2} \ ^{[ass_{ns}]}
+		\langle $while $x = 3 \land \neg x <= 1$ do $x := x - 1, s_{2} \rangle \rightarrow s_{2} \ ^{[while_{ns}^{ff}]}
 \justifies
-	\langle z := ((1 + 1) * 2 + 3) * 4 + 5 * 6 + 7; x := 1; $if $z <= x \land !(x <= z \land z <= x)$ then $x := 0$ else $$skip$; $while $$false$$ do $(x := x + 1; x := x - 1), s_{\bot,\bot}\rangle \rightarrow s_{1,65}
+	\langle $while $x = 3 \land \neg x <= 1$ do $x := x - 1, s_{3}\rangle \rightarrow s_{2}
+\thickness = 0.1 em
 \using
-	[comp_{ns}]
+	[while_{ns}^{tt}]
 \end{prooftree}
 \end{document}

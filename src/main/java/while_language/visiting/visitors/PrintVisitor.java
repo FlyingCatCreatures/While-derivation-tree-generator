@@ -147,7 +147,7 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
 
     @Override
     public Void visit(negation n) {
-        sb.append("!");
+        sb.append("\\neg ");
         appendExp(n.b(), getPrecedence(n));
         return null;
     }
