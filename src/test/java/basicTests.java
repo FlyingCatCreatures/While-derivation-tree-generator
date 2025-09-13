@@ -1,4 +1,5 @@
 import java.util.Map;
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
@@ -44,10 +45,15 @@ public class basicTests {
 
     @Test
     void testRepeatUntilFive() throws Exception {
-        Map<String, Integer> init = Map.of("x", 0);
-        Map<String, Integer> expected = Map.of("x", 5);
-        TestHelper.assertFinalState("repeat-until.while", init, expected);
+        Random random = new Random();
+        for(int i=0; i<10; i++){
+            int x = random.nextInt(501) - 250; // random int between -250 and 250
+            Map<String, Integer> init = Map.of("x", x);
+            Map<String, Integer> expected = Map.of("x", 5);
+            TestHelper.assertFinalState("repeat-until5.while", init, expected);
+        }
     }
+
     @Test
     void testSkip() throws Exception {
         Map<String, Integer> init = Map.of("x", 42);
