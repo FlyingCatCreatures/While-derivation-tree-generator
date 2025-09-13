@@ -50,10 +50,14 @@ java -cp build/classes/java/main while_language.Main WHILE_FILE
 
 Where `WHILE_FILE` is the name of a file located in the `input_files` directory. There are also two optional flags:
 ```sh
+--ns
 --pdf-maxwidth x
 --init-state n var_1 val_1 var_2 val_2 ... var_n val_n
 ```
-Where x, n, and all the val's are integers. The former sets the max width of the eventually produced pdf of the derivation tree, and the latter defines a starting state to execute the program in.
+Where x, n, and all the val's are integers. 
+`--ns` generates a derivation tree with natural semantics, instead of one with abrupt completion.
+`--pdf-maxwidth` sets the max width of the eventually produced pdf of the derivation tree.
+`--init-state` defines a starting state to execute the program in.
 
 You don't need to build the program just to use it, as the repository already should already have an up to date build. Should you want to you though, you can do so by running `./gradlew build`. This only works if you have a valid Java Development Kit and gradle installed. Doing this also runs the tests in `src/test`.
 

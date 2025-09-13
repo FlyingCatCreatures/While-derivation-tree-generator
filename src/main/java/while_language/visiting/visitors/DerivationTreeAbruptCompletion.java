@@ -1,0 +1,273 @@
+package while_language.visiting.visitors;
+
+import java.util.Map;
+import java.util.Set;
+
+import while_language.Syntax.stm.*;
+import while_language.util.BreakStatus;
+import while_language.visiting.StmVisitor;
+
+public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
+    private StringBuilder sb;
+    private int indent = 0;
+    private final Set<String> allVars;
+    private final Evaluator eval;
+    public DerivationTreeAbruptCompletion(Set<String> vars, String varwidth,  Map<String, Integer> init_state){
+        eval = new Evaluator(init_state);
+
+        allVars = vars;
+        String preamble = """
+            %% !TEX TS-program = XeLaTeX
+            \\documentclass[varwidth=%s]{standalone}
+            \\usepackage{prooftree}
+            \\usepackage{amsfonts} %s for \\mathbb{}
+
+            \\begin{document}
+            """.formatted(varwidth, '%');
+        sb = new StringBuilder(preamble + makeLegend() + "\\\\  \n\n");
+    }
+
+    private void indent() { indent++; }
+    private void dedent() { indent--; }
+    
+    private void appendLine(String line) {
+        sb.append("\t".repeat(indent)).append(line).append("\n");
+    }
+    
+    private void appendStep(Stm stm, String originalState, BreakStatus breakStatus, String rule) {
+        PrintVisitor printer = new PrintVisitor();
+        stm.accept(printer);
+        indent();
+        appendLine("\\langle %s, %s \\rangle \\rightarrow (%s, %s) \\ ^{%s}".formatted(
+            printer.toString(), originalState, str(eval.state), breakStatus ==BreakStatus.BREAK_ENCOUNTERED ? "\\bullet" : "\\circ", rule
+        ));
+        dedent();
+    }
+   
+    private void appendStep(Stm stm, String originalState, BreakStatus breakStatus) {
+        PrintVisitor printer = new PrintVisitor();
+        stm.accept(printer);
+        indent();
+        appendLine("\\langle %s, %s \\rangle \\rightarrow (%s, %s)".formatted(
+            printer.toString(), originalState, str(eval.state), breakStatus ==BreakStatus.BREAK_ENCOUNTERED ? "\\bullet" : "\\circ"
+        ));
+        dedent();
+    }
+    
+    private String makeLegend() {
+        if (allVars.isEmpty()) {
+            return "For this tree we denote s to denote the empty state.";
+        }
+
+        StringBuilder vars = new StringBuilder();
+        StringBuilder mapping = new StringBuilder();
+        boolean first = true;
+        int idx = 0;
+        for (String var : allVars) {
+            if (!first) {
+                vars.append(",");
+                mapping.append("][");
+            }
+            // symbolic subscript: a, b, c, ...
+            char sym = (char) ('a' + idx);
+            vars.append(sym);
+            mapping.append(var).append("\\mapsto ").append(sym);
+            
+
+            idx++;
+            first = false;
+        }
+
+        return "For this tree we denote $s_{" + vars + "}$ to denote $s[" + mapping + "]$, where $" + vars + "\\in \\mathbb{N}$";
+    }
+
+    @Override
+    public String toString() {
+        return sb.toString() + "\\end{document}";
+    }
+
+    // Returns a representation like s_{a,b,c}
+    private String str(Map<String, Integer> s) {
+        StringBuilder state_sb = new StringBuilder("s_{");
+
+        boolean first = true;
+        for (String var : allVars) {
+            if (!first) {
+                state_sb.append(",");
+            }
+            Integer val = s.get(var);
+            if (val == null) {
+                state_sb.append("\\bot");
+            } else {
+                state_sb.append(val);
+            }
+            first = false;
+        }
+
+        state_sb.append("}");
+        return state_sb.toString();
+    }
+
+    public BreakStatus visit(assign a) {
+        String var = a.x().x();
+        Integer value = a.a().accept(eval);
+
+        String originalState = str(eval.state); // Store string representation of s
+        eval.state.put(var, value); // Transition to s'
+
+        appendStep(a, originalState, BreakStatus.NO_BREAK, "[ass]");
+        return BreakStatus.NO_BREAK;
+    }
+
+    public BreakStatus visit(skip s) {
+        appendStep(s, str(eval.state), BreakStatus.NO_BREAK, "[skip]");
+        return BreakStatus.NO_BREAK;
+    }
+
+    public BreakStatus visit(Break b) {
+        appendStep(b, str(eval.state), BreakStatus.BREAK_ENCOUNTERED, "[skip]");
+        return BreakStatus.BREAK_ENCOUNTERED;
+    }
+
+    public BreakStatus visit(if_then_else ite){
+        String state_before = str(eval.state);
+
+        boolean cond = ite.b().accept(eval);
+        Stm s = cond? ite.s1() : ite.s2();
+
+        appendLine("\\begin{prooftree}");
+        indent();
+        BreakStatus breakstatus = s.accept(this);
+        dedent();
+        appendLine("\\justifies");
+        appendStep(ite, state_before, breakstatus);
+        appendLine("\\thickness = 0.1 em");
+        appendLine("\\using");
+        indent();
+        appendLine("[if^{%s}]".formatted(cond ? "tt":"ff"));
+        dedent();
+        appendLine("\\end{prooftree}");
+        return breakstatus;
+    }
+
+    public BreakStatus visit(compound c){
+        String state_before = str(eval.state);
+
+        appendLine("\\begin{prooftree}");
+        indent();
+        BreakStatus b1 = c.s1().accept(this);
+        if(b1 == BreakStatus.NO_BREAK){
+            // Only execute s2 if no break was encountered in s1
+            BreakStatus b2 = c.s2().accept(this);
+            dedent();
+            appendLine("\\justifies");
+            appendStep(c, state_before, b2);
+            appendLine("\\thickness = 0.1 em");
+            appendLine("\\using");
+            indent();
+            appendLine("[comp^{\\circ}]");
+            dedent();
+            appendLine("\\end{prooftree}");
+            return b2;
+        }
+        
+        // if a break was encountered in s1 we skip s2
+        dedent();
+        appendLine("\\justifies");
+        appendStep(c, state_before, b1);
+        appendLine("\\thickness = 0.1 em");
+        appendLine("\\using");
+        indent();
+        appendLine("[comp^{\\bullet}]");
+        dedent();
+        appendLine("\\end{prooftree}");
+        return BreakStatus.BREAK_ENCOUNTERED;
+    }
+
+    public BreakStatus visit(while_do wd){
+        String originalState = str(eval.state); 
+        boolean cond = wd.b().accept(eval);
+
+        if(!cond){
+            appendStep(wd, originalState, BreakStatus.NO_BREAK, "[while^{ff}]");
+            return BreakStatus.NO_BREAK;
+        }
+
+        appendLine("\\begin{prooftree}");
+        indent();
+        BreakStatus b = wd.s().accept(this);
+        if(b == BreakStatus.BREAK_ENCOUNTERED){
+            dedent();
+            appendLine("\\justifies");
+            appendStep(wd, originalState, BreakStatus.NO_BREAK);
+            appendLine("\\thickness = 0.1 em");
+            appendLine("\\using");
+            indent();
+            appendLine("[while^{tt\\bullet}]");
+            dedent();
+            appendLine("\\end{prooftree}");
+            return BreakStatus.NO_BREAK;
+        }
+
+
+        wd.accept(this);
+        dedent();
+        appendLine("\\justifies");
+        appendStep(wd, originalState, BreakStatus.NO_BREAK);
+        appendLine("\\thickness = 0.1 em");
+        appendLine("\\using");
+        indent();
+        appendLine("[while^{tt\\circ}]");
+        dedent();
+        appendLine("\\end{prooftree}");
+        return BreakStatus.NO_BREAK;
+    }  
+    
+    public BreakStatus visit(repeat_until ru) {
+        String originalState = str(eval.state);
+
+        appendLine("\\begin{prooftree}");
+        indent();
+
+        BreakStatus b = ru.s().accept(this);
+        if (b == BreakStatus.BREAK_ENCOUNTERED) {
+            dedent();
+            appendLine("\\justifies");
+            appendStep(ru, originalState, BreakStatus.NO_BREAK);
+            appendLine("\\thickness = 0.1 em");
+            appendLine("\\using");
+            indent();
+            appendLine("[repeat-until^{\\bullet}]");
+            dedent();
+            appendLine("\\end{prooftree}");
+            return BreakStatus.NO_BREAK;
+        }
+
+        boolean cond = ru.b().accept(eval);
+        if (cond) {
+            dedent();
+            appendLine("\\justifies");
+            appendStep(ru, originalState, BreakStatus.NO_BREAK);
+            appendLine("\\thickness = 0.1 em");
+            appendLine("\\using");
+            indent();
+            appendLine("[repeat-until^{tt}]");
+            dedent();
+            appendLine("\\end{prooftree}");
+            return BreakStatus.NO_BREAK;
+        } else {
+            ru.accept(this);
+            dedent();
+            appendLine("\\justifies");
+            appendStep(ru, originalState, BreakStatus.NO_BREAK);
+            appendLine("\\thickness = 0.1 em");
+            appendLine("\\using");
+            indent();
+            appendLine("[repeat-until^{ff}]");
+            dedent();
+            appendLine("\\end{prooftree}");
+            return BreakStatus.NO_BREAK;
+        }
+    }
+
+}

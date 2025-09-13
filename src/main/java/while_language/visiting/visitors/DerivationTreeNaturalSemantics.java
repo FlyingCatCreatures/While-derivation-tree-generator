@@ -6,12 +6,12 @@ import java.util.Set;
 import while_language.Syntax.stm.*;
 import while_language.visiting.StmVisitor;
 
-public class DerivationTree implements StmVisitor<Void> {
+public class DerivationTreeNaturalSemantics implements StmVisitor<Void> {
     private StringBuilder sb;
     private int indent = 0;
     private final Set<String> allVars;
     private final Evaluator eval;
-    public DerivationTree(Set<String> vars, String varwidth,  Map<String, Integer> init_state){
+    public DerivationTreeNaturalSemantics(Set<String> vars, String varwidth,  Map<String, Integer> init_state){
         eval = new Evaluator(init_state);
 
         allVars = vars;
@@ -50,7 +50,7 @@ public class DerivationTree implements StmVisitor<Void> {
             // symbolic subscript: a, b, c, ...
             char sym = (char) ('a' + idx);
             vars.append(sym);
-            mapping.append(var).append("->").append(sym);
+            mapping.append(var).append("\\mapsto ").append(sym);
             
 
             idx++;
@@ -111,11 +111,7 @@ public class DerivationTree implements StmVisitor<Void> {
     }
 
     public Void visit(Break b) {
-        String stateStr = str(eval.state);
-        indent();
-        appendLine("\\langle skip, "+ stateStr + " \\rangle \\rightarrow " + stateStr + " \\ ^{[break_{ns}]}");
-        dedent();
-        return null;
+        throw new IllegalStateException("In natural semantics no breaks are allowed.");
     }  
 
     public Void visit(if_then_else ite){

@@ -4,15 +4,52 @@
 \usepackage{amsfonts} % for \mathbb{}
 
 \begin{document}
-For this tree we denote $s_{a}$ to denote $s[x->a]$, where $a\in \mathbb{N}$\\  
+For this tree we denote $s_{a}$ to denote $s[x\mapsto a]$, where $a\in \mathbb{N}$\\  
 
 \begin{prooftree}
-		\langle x := x - 1, s_{3} \rangle \rightarrow s_{2} \ ^{[ass_{ns}]}
-		\langle $while $x = 3 \land \neg x <= 1$ do $x := x - 1, s_{2} \rangle \rightarrow s_{2} \ ^{[while_{ns}^{ff}]}
+	\begin{prooftree}
+			\langle x := x + 1, s_{1} \rangle \rightarrow (s_{2}, \circ) \ ^{[ass]}
+		\begin{prooftree}
+				\langle $skip$, s_{2} \rangle \rightarrow (s_{2}, \circ) \ ^{[skip]}
+		\justifies
+			\langle $if $x = 3$ then $$break$$ else $$skip$, s_{2} \rangle \rightarrow (s_{2}, \circ)
+		\thickness = 0.1 em
+		\using
+			[if^{ff}]
+		\end{prooftree}
+	\justifies
+		\langle x := x + 1; $if $x = 3$ then $$break$$ else $$skip$, s_{1} \rangle \rightarrow (s_{2}, \circ)
+	\thickness = 0.1 em
+	\using
+		[comp^{\circ}]
+	\end{prooftree}
+	\begin{prooftree}
+		\begin{prooftree}
+				\langle x := x + 1, s_{2} \rangle \rightarrow (s_{3}, \circ) \ ^{[ass]}
+			\begin{prooftree}
+					\langle $break$, s_{3} \rangle \rightarrow (s_{3}, \bullet) \ ^{[skip]}
+			\justifies
+				\langle $if $x = 3$ then $$break$$ else $$skip$, s_{3} \rangle \rightarrow (s_{3}, \bullet)
+			\thickness = 0.1 em
+			\using
+				[if^{tt}]
+			\end{prooftree}
+		\justifies
+			\langle x := x + 1; $if $x = 3$ then $$break$$ else $$skip$, s_{2} \rangle \rightarrow (s_{3}, \bullet)
+		\thickness = 0.1 em
+		\using
+			[comp^{\circ}]
+		\end{prooftree}
+	\justifies
+		\langle $while $x <= 5$ do $(x := x + 1; $if $x = 3$ then $$break$$ else $$skip$), s_{2} \rangle \rightarrow (s_{3}, \circ)
+	\thickness = 0.1 em
+	\using
+		[while^{tt\bullet}]
+	\end{prooftree}
 \justifies
-	\langle $while $x = 3 \land \neg x <= 1$ do $x := x - 1, s_{3}\rangle \rightarrow s_{2}
+	\langle $while $x <= 5$ do $(x := x + 1; $if $x = 3$ then $$break$$ else $$skip$), s_{1} \rangle \rightarrow (s_{3}, \circ)
 \thickness = 0.1 em
 \using
-	[while_{ns}^{tt}]
+	[while^{tt\circ}]
 \end{prooftree}
 \end{document}
