@@ -71,6 +71,18 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
         if (doParenthesis) sb.append(")");
         return null;
     }
+    @Override
+    public Void visit(repeat_until ru){
+        boolean doParenthesis = ru.s() instanceof compound;
+
+        sb.append("$repeat $");
+        if (doParenthesis) sb.append("(");
+        ru.s().accept(this);
+        if (doParenthesis) sb.append(")");
+        sb.append("$ until $");
+        ru.b().accept(this);
+        return null;
+    }
 
     @Override
     public Void visit(Num n) {

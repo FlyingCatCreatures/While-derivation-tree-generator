@@ -134,7 +134,30 @@ public class DerivationTree implements StmVisitor<Void> {
         appendLine("\\end{prooftree}");
         return null;
     }
-    
+
+    public Void visit(compound c){
+        String state_before = str(eval.state);
+        PrintVisitor printer = new PrintVisitor();
+        c.accept(printer);
+
+        appendLine("\\begin{prooftree}");
+        indent();
+        c.s1().accept(this);
+        c.s2().accept(this);
+        dedent();
+        appendLine("\\justifies");
+        indent();
+        appendLine("\\langle " + printer.toString() + ", "+ state_before + "\\rangle \\rightarrow " + str(eval.state));
+        dedent();
+        appendLine("\\thickness = 0.1 em");
+        appendLine("\\using");
+        indent();
+        appendLine("[comp_{ns}]");
+        dedent();
+        appendLine("\\end{prooftree}");
+        return null;
+    }
+
     public Void visit(while_do wd){
         PrintVisitor printer = new PrintVisitor();
         wd.accept(printer);
@@ -165,30 +188,38 @@ public class DerivationTree implements StmVisitor<Void> {
         dedent();
         appendLine("\\end{prooftree}");
         return null;
-    }    
+    }  
     
-    public Void visit(compound c){
-        String state_before = str(eval.state);
+    public Void visit(repeat_until ru){
         PrintVisitor printer = new PrintVisitor();
-        c.accept(printer);
+        ru.accept(printer);
+
+        String originalState = str(eval.state); 
 
         appendLine("\\begin{prooftree}");
         indent();
-        c.s1().accept(this);
-        c.s2().accept(this);
+        ru.s().accept(this); // run the statement once
+        boolean cond = ru.b().accept(eval);
+        if(!cond){
+            // If the condition is false we need to accept this again
+            ru.accept(this); 
+        }
         dedent();
         appendLine("\\justifies");
         indent();
-        appendLine("\\langle " + printer.toString() + ", "+ state_before + "\\rangle \\rightarrow " + str(eval.state));
+        appendLine("\\langle " + printer.toString() + ", "+ originalState + "\\rangle \\rightarrow " + str(eval.state));
         dedent();
         appendLine("\\thickness = 0.1 em");
         appendLine("\\using");
         indent();
-        appendLine("[comp_{ns}]");
+        appendLine("[repeat-until_{ns}^{" + (cond ? "tt":"ff") + "}]");
         dedent();
         appendLine("\\end{prooftree}");
+
         return null;
-    }
+    }  
+    
+    
 }
 
 /*

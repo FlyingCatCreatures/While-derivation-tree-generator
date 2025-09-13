@@ -38,7 +38,7 @@ public class Tokenizer {
     private final List<Token> tokens;
 
     private static final Set<String> KEYWORDS = Set.of(
-        "skip", "if", "then", "else", "while", "do", "true", "false"
+        "skip", "if", "then", "else", "while", "do", "true", "false", "repeat", "until"
     );
     private static final Set<String> OPS = Set.of(
         ":=", "+", "-", "*", "=", "<=", "!", "&"

@@ -72,6 +72,17 @@ public class SyntaxTreePrintVisitor implements StmVisitor<Void>, AexpVisitor<Voi
         return null;
     }
 
+    @Override
+    public Void visit(repeat_until ru) {
+        printIndent();
+        sb.append("repeat_until\n");
+        indent++;
+        printIndent(); sb.append("body:\n"); indent++; ru.s().accept(this); indent--;
+        printIndent(); sb.append("cond: "); ru.b().accept(this); sb.append("\n");
+        indent--;
+        return null;
+    }
+
     // Arithmetic expressions
     @Override
     public Void visit(Num n) {

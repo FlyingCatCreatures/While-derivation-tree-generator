@@ -19,6 +19,7 @@ import while_language.Syntax.stm.compound;
 import while_language.Syntax.stm.if_then_else;
 import while_language.Syntax.stm.skip;
 import while_language.Syntax.stm.while_do;
+import while_language.Syntax.stm.repeat_until;
 import while_language.visiting.AexpVisitor;
 import while_language.visiting.BexpVisitor;
 import while_language.visiting.StmVisitor;
@@ -114,6 +115,13 @@ public class Evaluator implements StmVisitor<Void>, AexpVisitor<Integer>, BexpVi
     }
 
     @Override
+    public Void visit(compound c) {
+        c.s1().accept(this);
+        c.s2().accept(this);
+        return null;
+    }
+    
+    @Override
     public Void visit(while_do w) {
         // By definition this would have to be recursive but of course a while loop is equivalent
         // And a stackoverflow is not our goal, so we do that
@@ -124,9 +132,13 @@ public class Evaluator implements StmVisitor<Void>, AexpVisitor<Integer>, BexpVi
     }
 
     @Override
-    public Void visit(compound c) {
-        c.s1().accept(this);
-        c.s2().accept(this);
+    public Void visit(repeat_until ru) {
+        // By definition this would have to be recursive but of course a do-while loop with the condition swapped is equivalent
+        // And a stackoverflow is not our goal, so we do that
+        do{
+            ru.s().accept(this);
+        }
+        while(!ru.b().accept(this));
         return null;
     }
 }

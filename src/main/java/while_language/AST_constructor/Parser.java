@@ -21,6 +21,7 @@ import while_language.Syntax.stm.compound;
 import while_language.Syntax.stm.if_then_else;
 import while_language.Syntax.stm.skip;
 import while_language.Syntax.stm.while_do;
+import while_language.Syntax.stm.repeat_until;
 
 import java.util.List;
 import java.util.Set;
@@ -55,6 +56,7 @@ public class Parser {
         }
         return ret;
     }
+
     private Stm parseStm() {
         Stm stmt = parseAtomicStm();
 
@@ -107,6 +109,14 @@ public class Parser {
                             throw new RuntimeException("Expected 'do' after while condition at position " + pos);
                         Stm body = parseAtomicStm(); // only parse one atomic statement as body
                         stmt = new while_do(whileCond, body);
+                        break;
+                    case "repeat":
+                        Stm repeatBody = parseStm();
+                        Token untilToken = consume();
+                        if (!untilToken.value().equals("until"))
+                            throw new RuntimeException("Expected 'until' after repeat body at position " + pos);
+                        Bexp untilCond = parseBexp();
+                        stmt = new repeat_until(repeatBody, untilCond);
                         break;
                     default:
                         throw new RuntimeException("Unexpected keyword " + next.value() + " at position " + pos);

@@ -11,7 +11,7 @@ public class factorialTest {
 
     @Test 
     void testFactorial() throws Exception {
-        for (int n=0; n<=10; n++){
+        for (int n=0; n<=100; n++){
             Map<String, Integer> init = Map.of("n", n);
             assertEquals(TestHelper.eval("factorial.while", init).get("r"), factorial(n));
         }

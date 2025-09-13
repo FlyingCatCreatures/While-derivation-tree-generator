@@ -36,6 +36,19 @@ public class basicTests {
     }
 
     @Test
+    void testRepeatUntilTrue() throws Exception {
+        Map<String, Integer> init = Map.of("x", 0);
+        Map<String, Integer> expected = Map.of("x", 1);
+        TestHelper.assertFinalState("repeat-until-true.while", init, expected);
+    }
+
+    @Test
+    void testRepeatUntilFive() throws Exception {
+        Map<String, Integer> init = Map.of("x", 0);
+        Map<String, Integer> expected = Map.of("x", 5);
+        TestHelper.assertFinalState("repeat-until.while", init, expected);
+    }
+    @Test
     void testSkip() throws Exception {
         Map<String, Integer> init = Map.of("x", 42);
         Map<String, Integer> expected = Map.of("x", 42);
