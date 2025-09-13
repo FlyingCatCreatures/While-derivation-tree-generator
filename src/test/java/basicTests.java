@@ -62,6 +62,11 @@ public class basicTests {
     }
 
     @Test
+    void testBreak() throws Exception {
+        Map<String, Integer> expected = Map.of("x", 0, "y", 0);
+        TestHelper.assertFinalState("break.while", expected);
+    }
+    @Test
     void testIfTrue() throws Exception {
         Map<String, Integer> expected = Map.of("y", 1);
         TestHelper.assertFinalState("if_true.while", expected);

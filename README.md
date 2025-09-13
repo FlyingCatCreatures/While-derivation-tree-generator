@@ -22,6 +22,8 @@ S ::=   x := a |
 	S1;S2 | 
 	if b then S1 else S2 |
 	while b do S |
+    repeat S until b |
+    break |
 	(S)
 a ::=   n | 
 	x | 

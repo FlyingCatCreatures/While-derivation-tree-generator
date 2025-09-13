@@ -25,6 +25,12 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
     }
 
     @Override
+    public Void visit(Break b) {
+        sb.append("$break$");
+        return null;
+    }
+
+    @Override
     public Void visit(assign a) {
         sb.append(a.x().x()).append(" := ");
         a.a().accept(this);

@@ -110,6 +110,14 @@ public class DerivationTree implements StmVisitor<Void> {
         return null;
     }
 
+    public Void visit(Break b) {
+        String stateStr = str(eval.state);
+        indent();
+        appendLine("\\langle skip, "+ stateStr + " \\rangle \\rightarrow " + stateStr + " \\ ^{[break_{ns}]}");
+        dedent();
+        return null;
+    }  
+
     public Void visit(if_then_else ite){
         String state_before = str(eval.state);
         PrintVisitor printer = new PrintVisitor();
@@ -217,9 +225,7 @@ public class DerivationTree implements StmVisitor<Void> {
         appendLine("\\end{prooftree}");
 
         return null;
-    }  
-    
-    
+    }
 }
 
 /*

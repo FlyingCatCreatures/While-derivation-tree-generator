@@ -33,7 +33,11 @@ public class Main {
             if (args[i].equals("--pdf-maxwidth")){
                 try{
                     i++; // Consume flag
-                    Integer.parseInt(args[i]);
+
+                    // We want to make sure it is an integer, but we want to pass the string
+                    // So we don't store the parsed integer, just check if its valid
+                    Integer.parseInt(args[i]); 
+                   
                     // x is automatically consumed in the loop update statement
                 }catch (NumberFormatException e){
                     System.err.println("--pdf-maxwidth must be an integer, but found " + args[2]);
