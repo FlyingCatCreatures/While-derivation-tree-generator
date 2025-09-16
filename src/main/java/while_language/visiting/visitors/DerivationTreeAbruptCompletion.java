@@ -123,22 +123,22 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
         String originalState = str(eval.state); // Store string representation of s
         eval.state.put(var, value); // Transition to s'
 
-        appendStep(a, originalState, BreakStatus.NONE, "[ass]");
+        appendStep(a, originalState, BreakStatus.NONE, "[ass_{ns}]");
         return BreakStatus.NONE;
     }
 
     public BreakStatus visit(skip s) {
-        appendStep(s, str(eval.state), BreakStatus.NONE, "[skip]");
+        appendStep(s, str(eval.state), BreakStatus.NONE, "[skip_{ns}]");
         return BreakStatus.NONE;
     }
 
     public BreakStatus visit(Break b) {
-        appendStep(b, str(eval.state), BreakStatus.BREAK, "[break]");
+        appendStep(b, str(eval.state), BreakStatus.BREAK, "[break_{ns}]");
         return BreakStatus.BREAK;
     }
 
     public BreakStatus visit(Continue c) {
-        appendStep(c, str(eval.state), BreakStatus.CONTINUE, "[continue]");
+        appendStep(c, str(eval.state), BreakStatus.CONTINUE, "[continue_{ns}]");
         return BreakStatus.CONTINUE;
     }
 
@@ -157,7 +157,7 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
         appendLine("\\thickness = 0.1 em");
         appendLine("\\using");
         indent();
-        appendLine("[if^{%s}]".formatted(cond ? "tt":"ff"));
+        appendLine("[if_{ns}^{%s}]".formatted(cond ? "tt":"ff"));
         dedent();
         appendLine("\\end{prooftree}");
         return breakstatus;
@@ -182,7 +182,7 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
         appendLine("\\thickness = 0.1 em");
         appendLine("\\using");
         indent();
-        appendLine("[comp^{%s}]".formatted(marker(retStatus)));
+        appendLine("[comp_{ns}^{%s}]".formatted(marker(retStatus)));
         dedent();
         appendLine("\\end{prooftree}");
         return retStatus;
@@ -193,7 +193,7 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
         boolean cond = wd.b().accept(eval);
 
         if(!cond){
-            appendStep(wd, originalState, BreakStatus.NONE, "[while^{ff}]");
+            appendStep(wd, originalState, BreakStatus.NONE, "[while_{ns}^{ff}]");
             return BreakStatus.NONE;
         }
 
@@ -207,7 +207,7 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
             appendLine("\\thickness = 0.1 em");
             appendLine("\\using");
             indent();
-            appendLine("[while^{tt\\bullet}]");
+            appendLine("[while_{ns}^{tt\\bullet}]");
             dedent();
             appendLine("\\end{prooftree}");
             return BreakStatus.NONE;
@@ -221,7 +221,7 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
         appendLine("\\thickness = 0.1 em");
         appendLine("\\using");
         indent();
-        appendLine("[while^{tt\\circ}]");
+        appendLine("[while_{ns}^{tt\\circ}]");
         dedent();
         appendLine("\\end{prooftree}");
         return BreakStatus.NONE;
@@ -241,7 +241,7 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
             appendLine("\\thickness = 0.1 em");
             appendLine("\\using");
             indent();
-            appendLine("[repeat-until^{\\bullet}]");
+            appendLine("[repeat-until_{ns}^{\\bullet}]");
             dedent();
             appendLine("\\end{prooftree}");
             return BreakStatus.NONE;
@@ -255,7 +255,7 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
             appendLine("\\thickness = 0.1 em");
             appendLine("\\using");
             indent();
-            appendLine("[repeat-until^{tt}]");
+            appendLine("[repeat-until_{ns}^{tt}]");
             dedent();
             appendLine("\\end{prooftree}");
             return BreakStatus.NONE;
@@ -267,7 +267,7 @@ public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
             appendLine("\\thickness = 0.1 em");
             appendLine("\\using");
             indent();
-            appendLine("[repeat-until^{ff}]");
+            appendLine("[repeat-until_{ns}^{ff}]");
             dedent();
             appendLine("\\end{prooftree}");
             return BreakStatus.NONE;

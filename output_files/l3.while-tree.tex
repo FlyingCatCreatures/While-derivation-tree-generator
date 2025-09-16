@@ -1,0 +1,86 @@
+% !TEX TS-program = XeLaTeX
+\documentclass[varwidth=100cm]{standalone}
+\usepackage{prooftree}
+\usepackage{amsfonts} % for \mathbb{}
+
+\begin{document}
+For this tree we denote $s_{a,b}$ to denote $s[x\mapsto a][y\mapsto b]$, where $a,b\in \mathbb{N}$\\  
+
+\begin{prooftree}
+		\langle x := 5, s_{\bot,\bot} \rangle \rightarrow (s_{5,\bot}, \circ) \ ^{[ass_{ns}]}
+	\begin{prooftree}
+			\langle y := 3, s_{5,\bot} \rangle \rightarrow (s_{5,3}, \circ) \ ^{[ass_{ns}]}
+		\begin{prooftree}
+			\begin{prooftree}
+					\langle x := x + 2, s_{5,3} \rangle \rightarrow (s_{7,3}, \circ) \ ^{[ass_{ns}]}
+				\begin{prooftree}
+					\begin{prooftree}
+							\langle $skip$, s_{7,3} \rangle \rightarrow (s_{7,3}, \circ) \ ^{[skip_{ns}]}
+					\justifies
+						\langle $if $\neg x <= 8$ then $$break$$ else $$skip$, s_{7,3} \rangle \rightarrow (s_{7,3}, \circ)
+					\thickness = 0.1 em
+					\using
+						[if_{ns}^{ff}]
+					\end{prooftree}
+						\langle y := y * 3, s_{7,3} \rangle \rightarrow (s_{7,9}, \circ) \ ^{[ass_{ns}]}
+				\justifies
+					\langle $if $\neg x <= 8$ then $$break$$ else $$skip$; y := y * 3, s_{7,3} \rangle \rightarrow (s_{7,9}, \circ)
+				\thickness = 0.1 em
+				\using
+					[comp_{ns}^{\circ}]
+				\end{prooftree}
+			\justifies
+				\langle x := x + 2; $if $\neg x <= 8$ then $$break$$ else $$skip$; y := y * 3, s_{5,3} \rangle \rightarrow (s_{7,9}, \circ)
+			\thickness = 0.1 em
+			\using
+				[comp_{ns}^{\circ}]
+			\end{prooftree}
+			\begin{prooftree}
+				\begin{prooftree}
+						\langle x := x + 2, s_{7,9} \rangle \rightarrow (s_{9,9}, \circ) \ ^{[ass_{ns}]}
+					\begin{prooftree}
+						\begin{prooftree}
+								\langle $break$, s_{9,9} \rangle \rightarrow (s_{9,9}, \bullet) \ ^{[break_{ns}]}
+						\justifies
+							\langle $if $\neg x <= 8$ then $$break$$ else $$skip$, s_{9,9} \rangle \rightarrow (s_{9,9}, \bullet)
+						\thickness = 0.1 em
+						\using
+							[if_{ns}^{tt}]
+						\end{prooftree}
+					\justifies
+						\langle $if $\neg x <= 8$ then $$break$$ else $$skip$; y := y * 3, s_{9,9} \rangle \rightarrow (s_{9,9}, \bullet)
+					\thickness = 0.1 em
+					\using
+						[comp_{ns}^{\bullet}]
+					\end{prooftree}
+				\justifies
+					\langle x := x + 2; $if $\neg x <= 8$ then $$break$$ else $$skip$; y := y * 3, s_{7,9} \rangle \rightarrow (s_{9,9}, \bullet)
+				\thickness = 0.1 em
+				\using
+					[comp_{ns}^{\bullet}]
+				\end{prooftree}
+			\justifies
+				\langle $while $x <= 7$ do $(x := x + 2; $if $\neg x <= 8$ then $$break$$ else $$skip$; y := y * 3), s_{7,9} \rangle \rightarrow (s_{9,9}, \circ)
+			\thickness = 0.1 em
+			\using
+				[while_{ns}^{tt\bullet}]
+			\end{prooftree}
+		\justifies
+			\langle $while $x <= 7$ do $(x := x + 2; $if $\neg x <= 8$ then $$break$$ else $$skip$; y := y * 3), s_{5,3} \rangle \rightarrow (s_{9,9}, \circ)
+		\thickness = 0.1 em
+		\using
+			[while_{ns}^{tt\circ}]
+		\end{prooftree}
+	\justifies
+		\langle y := 3; $while $x <= 7$ do $(x := x + 2; $if $\neg x <= 8$ then $$break$$ else $$skip$; y := y * 3), s_{5,\bot} \rangle \rightarrow (s_{9,9}, \circ)
+	\thickness = 0.1 em
+	\using
+		[comp_{ns}^{\circ}]
+	\end{prooftree}
+\justifies
+	\langle x := 5; y := 3; $while $x <= 7$ do $(x := x + 2; $if $\neg x <= 8$ then $$break$$ else $$skip$; y := y * 3), s_{\bot,\bot} \rangle \rightarrow (s_{9,9}, \circ)
+\thickness = 0.1 em
+\using
+	[comp_{ns}^{\circ}]
+\end{prooftree}
+\end{document}

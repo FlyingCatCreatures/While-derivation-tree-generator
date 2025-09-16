@@ -62,15 +62,15 @@ public class Parser {
     private Stm parseStm() {
         Stm stmt = parseAtomicStm();
 
-        // Only combine with ; if we’re not at the end of a parenthesized block
-        while (peek().type() == TokenType.SEMICOLON) {
+        if (peek().type() == TokenType.SEMICOLON) {
             consume(); // eat ;
-            Stm nextStmt = parseAtomicStm();
-            stmt = new compound(stmt, nextStmt);
+            Stm rest = parseStm(); 
+            return new compound(stmt, rest);
         }
 
         return stmt;
     }
+
     
     private Stm parseAtomicStm() {
         Token next = consume();
