@@ -7,12 +7,12 @@ import while_language.Syntax.stm.*;
 import while_language.util.BreakStatus;
 import while_language.visiting.StmVisitor;
 
-public class DerivationTreeAbruptCompletion implements StmVisitor<BreakStatus> {
+public class DerivationTreeGenerator implements StmVisitor<BreakStatus> {
     private StringBuilder sb;
     private int indent = 0;
     private final Set<String> allVars;
     private final Evaluator eval;
-    public DerivationTreeAbruptCompletion(Set<String> vars, String varwidth,  Map<String, Integer> init_state){
+    public DerivationTreeGenerator(Set<String> vars, String varwidth,  Map<String, Integer> init_state){
         eval = new Evaluator(init_state);
 
         allVars = vars;

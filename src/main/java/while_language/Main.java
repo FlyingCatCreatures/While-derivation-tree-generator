@@ -6,8 +6,7 @@ import while_language.AST_constructor.Tokenizer.Token;
 import while_language.Syntax.stm.Stm;
 import while_language.util.BreakStatus;
 import while_language.visiting.StmVisitor;
-import while_language.visiting.visitors.DerivationTreeNaturalSemantics;
-import while_language.visiting.visitors.DerivationTreeAbruptCompletion;
+import while_language.visiting.visitors.DerivationTreeGenerator;
 import while_language.visiting.visitors.Evaluator;
 import while_language.visiting.visitors.PrintVisitor;
 import while_language.visiting.visitors.SyntaxTreePrintVisitor;
@@ -20,10 +19,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class Main {
-    @SuppressWarnings("rawtypes")
     public static void main(String[] args) {
         if (args.length < 1) {
-            System.err.println("Usage: java path/to/Main <filename> [--ns] [--pdf-maxwidth x] [--init_state n var_1 val_1 var_2 val_2 ... var_n val_n]");
+            System.err.println("Usage: java path/to/Main <filename> [--pdf-maxwidth x] [--init_state n var_1 val_1 var_2 val_2 ... var_n val_n]");
             System.err.println("Where filename is relative to the input_files directory");
             System.err.println("And x is an integer representing a maximum pdf width in centimeters");
             System.err.println("And var_i and val_i are a variable name and an integer respectively.");
@@ -33,7 +31,6 @@ public class Main {
         String filename = args[0];
         String pdf_maxwidth = "100cm";
         Map<String, Integer> init_state = new HashMap<>();
-        boolean use_ns = false;
         for(int i=1; i<args.length; i++){
             if (args[i].equals("--pdf-maxwidth")){
                 try{
@@ -69,10 +66,7 @@ public class Main {
                     }
                 }
                 i = i + 2*n - 1; // Skip processed arguments
-            }else if(args[i].equals("--ns")){
-                use_ns = true;
-            }
-            else{
+            } else {
                 System.err.println("Unknown argument given at position " + i + " . Found: " + args[i]);
                 System.exit(1);
             }
@@ -118,21 +112,12 @@ public class Main {
 
             // Create derivation tree
             System.out.println("Generating syntax Tree...");
-            String outstr;
-            if(use_ns){
-                StmVisitor<Void> visitor = new DerivationTreeNaturalSemantics(vars, pdf_maxwidth, init_state);
-                ast.accept(visitor);
-                outstr = visitor.toString();
-            }
-            else{
-                StmVisitor<BreakStatus> visitor = new DerivationTreeAbruptCompletion(vars, pdf_maxwidth, init_state);
-                ast.accept(visitor);
-                outstr = visitor.toString();
-            }
+            StmVisitor<BreakStatus> visitor = new DerivationTreeGenerator(vars, pdf_maxwidth, init_state);
+            ast.accept(visitor);
             
             // Write all output to <filename>.out
             Path outFile = Path.of("output_files/" + filename + "-tree.tex");
-            Files.writeString(outFile, outstr);
+            Files.writeString(outFile, visitor.toString());
             System.out.println("Output written to " + outFile.toAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
