@@ -154,6 +154,25 @@ public class SyntaxTreePrintVisitor implements StmVisitor<Void>, AexpVisitor<Voi
     }
 
     @Override
+    public Void visit(conjunction c) {
+        sb.append("conjunction\n");
+        indent++;
+        printIndent(); sb.append("left: "); c.b1().accept(this); sb.append("\n");
+        printIndent(); sb.append("right: "); c.b2().accept(this); sb.append("\n");
+        indent--;
+        return null;
+    }
+
+    @Override
+    public Void visit(negation n) {
+        sb.append("negation\n");
+        indent++;
+        printIndent(); sb.append("bexp: "); n.b().accept(this); sb.append("\n");
+        indent--;
+        return null;
+    }
+
+    @Override
     public Void visit(equals e) {
         sb.append("equals\n");
         indent++;
@@ -174,20 +193,31 @@ public class SyntaxTreePrintVisitor implements StmVisitor<Void>, AexpVisitor<Voi
     }
 
     @Override
-    public Void visit(conjunction c) {
-        sb.append("conjunction\n");
+    public Void visit(geq q) {
+        sb.append("geq\n");
         indent++;
-        printIndent(); sb.append("left: "); c.b1().accept(this); sb.append("\n");
-        printIndent(); sb.append("right: "); c.b2().accept(this); sb.append("\n");
+        printIndent(); sb.append("left: "); q.a1().accept(this); sb.append("\n");
+        printIndent(); sb.append("right: "); q.a2().accept(this); sb.append("\n");
         indent--;
         return null;
     }
 
     @Override
-    public Void visit(negation n) {
-        sb.append("negation\n");
+    public Void visit(lt l) {
+        sb.append("lt\n");
         indent++;
-        printIndent(); sb.append("bexp: "); n.b().accept(this); sb.append("\n");
+        printIndent(); sb.append("left: "); l.a1().accept(this); sb.append("\n");
+        printIndent(); sb.append("right: "); l.a2().accept(this); sb.append("\n");
+        indent--;
+        return null;
+    }
+
+    @Override
+    public Void visit(gt g) {
+        sb.append("gt\n");
+        indent++;
+        printIndent(); sb.append("left: "); g.a1().accept(this); sb.append("\n");
+        printIndent(); sb.append("right: "); g.a2().accept(this); sb.append("\n");
         indent--;
         return null;
     }

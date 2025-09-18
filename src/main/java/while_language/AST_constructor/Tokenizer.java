@@ -41,7 +41,7 @@ public class Tokenizer {
         "skip", "if", "then", "else", "while", "do", "true", "false", "repeat", "until", "break", "continue"
     );
     private static final Set<String> OPS = Set.of(
-        ":=", "+", "-", "*", "=", "<=", "!", "&"
+        ":=", "+", "-", "*", "=", "<=", "<", ">", ">=", "!", "&"
     );
 
     public Tokenizer(String input) {

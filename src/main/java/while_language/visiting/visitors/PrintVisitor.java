@@ -145,6 +145,21 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
     }
 
     @Override
+    public Void visit(conjunction c) {
+        appendExp(c.b1(), getPrecedence(c));
+        sb.append(" \\land ");
+        appendExp(c.b2(), getPrecedence(c));
+        return null;
+    }
+
+    @Override
+    public Void visit(negation n) {
+        sb.append("\\neg ");
+        appendExp(n.b(), getPrecedence(n));
+        return null;
+    }
+    
+    @Override
     public Void visit(equals e) {
         e.a1().accept(this);
         sb.append(" = ");
@@ -161,17 +176,26 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
     }
 
     @Override
-    public Void visit(conjunction c) {
-        appendExp(c.b1(), getPrecedence(c));
-        sb.append(" \\land ");
-        appendExp(c.b2(), getPrecedence(c));
+    public Void visit(geq q) {
+        q.a1().accept(this);
+        sb.append(" >= ");
+        q.a2().accept(this);
         return null;
     }
 
     @Override
-    public Void visit(negation n) {
-        sb.append("\\neg ");
-        appendExp(n.b(), getPrecedence(n));
+    public Void visit(lt l) {
+        l.a1().accept(this);
+        sb.append(" < ");
+        l.a2().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(gt g) {
+        g.a1().accept(this);
+        sb.append(" > ");
+        g.a2().accept(this);
         return null;
     }
 
@@ -188,10 +212,13 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
         if (bexp instanceof True || 
             bexp instanceof False || 
             bexp instanceof equals ||
-            bexp instanceof leq) return 99;         // Terminal expressions, never need to be parenthesised
+            bexp instanceof leq ||
+            bexp instanceof geq ||
+            bexp instanceof lt ||
+            bexp instanceof gt) return 99;          // Terminal expressions, never need to be parenthesised
         if (bexp instanceof negation) return 3;     // Higher than conjunction
         if (bexp instanceof conjunction) return 0;  // Lowest precedence
-        return -1;
+        throw new RuntimeException("Unknown precedence for boolean expression of type: " + bexp.getClass());
     }
 
     private void appendExp(Aexp aexp, int parentPrecedence) {

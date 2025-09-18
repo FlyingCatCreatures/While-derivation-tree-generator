@@ -12,8 +12,11 @@ import while_language.Syntax.bexp.False;
 import while_language.Syntax.bexp.True;
 import while_language.Syntax.bexp.conjunction;
 import while_language.Syntax.bexp.leq;
+import while_language.Syntax.bexp.lt;
 import while_language.Syntax.bexp.negation;
 import while_language.Syntax.bexp.equals;
+import while_language.Syntax.bexp.geq;
+import while_language.Syntax.bexp.gt;
 import while_language.Syntax.stm.Break;
 import while_language.Syntax.stm.Continue;
 import while_language.Syntax.stm.assign;
@@ -65,6 +68,21 @@ public class Evaluator implements StmVisitor<BreakStatus>, AexpVisitor<Integer>,
     @Override
     public Boolean visit(leq l) {
         return l.a1().accept(this)<=l.a2().accept(this);
+    }
+
+    @Override
+    public Boolean visit(geq q) {
+        return q.a1().accept(this)>=q.a2().accept(this);
+    }
+
+    @Override
+    public Boolean visit(lt l) {
+        return l.a1().accept(this)<l.a2().accept(this);
+    }
+
+    @Override
+    public Boolean visit(gt g) {
+        return g.a1().accept(this)>g.a2().accept(this);
     }
 
     @Override

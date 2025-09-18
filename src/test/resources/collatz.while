@@ -7,7 +7,7 @@ while !(x = 1) do
 
     % Check if x is even
     parity := x;
-    while !(parity <= 1) do
+    while parity > 1 do
     (
         parity := parity - 2
     );

@@ -14,7 +14,10 @@ import while_language.Syntax.bexp.True;
 import while_language.Syntax.bexp.conjunction;
 import while_language.Syntax.bexp.negation;
 import while_language.Syntax.bexp.equals;
+import while_language.Syntax.bexp.geq;
+import while_language.Syntax.bexp.gt;
 import while_language.Syntax.bexp.leq;
+import while_language.Syntax.bexp.lt;
 import while_language.Syntax.stm.Break;
 import while_language.Syntax.stm.Continue;
 import while_language.Syntax.stm.Stm;
@@ -223,13 +226,19 @@ public class Parser {
                 pos--;
                 Aexp a1 = parseAexp();
                 Token op = consume(); // Consume operator
-
-                if(op.type() != TokenType.OP || (!op.value().equals("=") && !op.value().equals("<=")))  throw new RuntimeException("Expected '=' or '<=' after arithmetic expression at position " + pos);
+                Set<String> validOps = Set.of("=", "<=", "<", ">", ">=");
+                if(op.type() != TokenType.OP || !validOps.contains(op.value()))  throw new RuntimeException("Expected comparison operator after arithmetic expression at position " + pos);
 
                 Aexp a2 = parseAexp();
-                if(op.value().equals("="))  exp = new equals(a1, a2);
-                else if (op.value().equals("<=")) exp = new leq(a1, a2);
-                else throw new RuntimeException("Expected '=' or '<=' after arithmetic expression at position " + pos);
+                switch(op.value()) {
+                    case "<" -> exp = new lt(a1, a2);
+                    case ">" -> exp = new gt(a1, a2);
+                    case ">=" -> exp = new geq(a1, a2);
+                    case "<=" -> exp = new leq(a1, a2);
+                    case "=" -> exp = new equals(a1, a2);
+                    default -> throw new RuntimeException("Expected comparison operator after arithmetic expression at position " + pos);
+                }
+
                 break;
             default:
                 throw new RuntimeException("Unexpected token " + next.value() + " of type " + next.type() + " at position " + pos);

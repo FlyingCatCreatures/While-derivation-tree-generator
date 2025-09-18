@@ -11,7 +11,8 @@ This project generates derivation trees for programs written in a simple While l
 - The conjunction operator (`&`).
 
 Other than that there are two more changes:
-- Grouping of statements using parentheses is made explicit in the grammar rather than being implicit
+- Grouping of statements using parentheses is made explicit in the grammar by way of parenthesis rather than being implicit
+- Additional comparison operators are made explicit instead of being implicitly handled using other boolean operators
 - There is a way to comment code by use of the '%' character. There are no multiline comments though. 
 
 Below is the full grammar specification used:
@@ -36,6 +37,9 @@ b ::=   true |
 	false | 
 	a1 = a2 | 
 	a1 <= a2| 
+    a1 >= a2|
+    a1 < a2 |
+    a1 > a2 |
 	!b | 
 	b1 & b2 |
 	(b)
