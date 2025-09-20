@@ -18,8 +18,6 @@ import while_language.Syntax.bexp.geq;
 import while_language.Syntax.bexp.gt;
 import while_language.Syntax.bexp.leq;
 import while_language.Syntax.bexp.lt;
-import while_language.Syntax.stm.Break;
-import while_language.Syntax.stm.Continue;
 import while_language.Syntax.stm.Stm;
 import while_language.Syntax.stm.assign;
 import while_language.Syntax.stm.compound;
@@ -74,7 +72,6 @@ public class Parser {
         return stmt;
     }
 
-    
     private Stm parseAtomicStm() {
         Token next = consume();
         Stm stmt;
@@ -94,12 +91,6 @@ public class Parser {
                 switch (next.value()) {
                     case "skip":
                         stmt = new skip();
-                        break;
-                    case "break":
-                        stmt = new Break();
-                        break;
-                    case "continue":
-                        stmt = new Continue();
                         break;
                     case "if":
                         Bexp cond = parseBexp();

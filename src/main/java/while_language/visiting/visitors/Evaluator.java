@@ -17,20 +17,17 @@ import while_language.Syntax.bexp.negation;
 import while_language.Syntax.bexp.equals;
 import while_language.Syntax.bexp.geq;
 import while_language.Syntax.bexp.gt;
-import while_language.Syntax.stm.Break;
-import while_language.Syntax.stm.Continue;
 import while_language.Syntax.stm.assign;
 import while_language.Syntax.stm.compound;
 import while_language.Syntax.stm.if_then_else;
 import while_language.Syntax.stm.skip;
 import while_language.Syntax.stm.while_do;
-import while_language.util.BreakStatus;
 import while_language.Syntax.stm.repeat_until;
 import while_language.visiting.AexpVisitor;
 import while_language.visiting.BexpVisitor;
 import while_language.visiting.StmVisitor;
 
-public class Evaluator implements StmVisitor<BreakStatus>, AexpVisitor<Integer>, BexpVisitor<Boolean> {
+public class Evaluator implements StmVisitor<Void>, AexpVisitor<Integer>, BexpVisitor<Boolean> {
     public final Map<String, Integer> state;
 
     public Evaluator(){
@@ -114,28 +111,18 @@ public class Evaluator implements StmVisitor<BreakStatus>, AexpVisitor<Integer>,
     }
 
     @Override
-    public BreakStatus visit(assign a) {
+    public Void visit(assign a) {
         state.put(a.x().x(), a.a().accept(this));
-        return BreakStatus.NONE;
+        return null;
     }
 
     @Override
-    public BreakStatus visit(skip s) {
-        return BreakStatus.NONE;
+    public Void visit(skip s) {
+        return null;
     }
 
     @Override
-    public BreakStatus visit(Break b) {
-        return BreakStatus.BREAK;
-    }
-        
-    @Override
-    public BreakStatus visit(Continue c) {
-        return BreakStatus.CONTINUE;
-    }
-
-    @Override
-    public BreakStatus visit(if_then_else ite) {
+    public Void visit(if_then_else ite) {
         if (ite.b().accept(this)){
             return ite.s1().accept(this);
         }else{
@@ -144,33 +131,29 @@ public class Evaluator implements StmVisitor<BreakStatus>, AexpVisitor<Integer>,
     }
 
     @Override
-    public BreakStatus visit(compound c) {
-        switch(c.s1().accept(this)){
-            case NONE: return c.s2().accept(this);
-            case CONTINUE: return BreakStatus.CONTINUE;
-            case BREAK: return BreakStatus.BREAK;
-            default: throw new IllegalStateException("Unreachable");
-        }
+    public Void visit(compound c) {
+        c.s1().accept(this);
+        c.s2().accept(this);
+        return null;
     }
     
     @Override
-    public BreakStatus visit(while_do w) {
+    public Void visit(while_do w) {
         // By definition this would have to be recursive but of course a while loop is equivalent
-        // And a stackoverflow is not our goal, so we do that
-        while( w.b().accept(this)){
-            if(w.s().accept(this)==BreakStatus.BREAK) break;
+        while(w.b().accept(this)){
+            w.s().accept(this);
         }
-        return BreakStatus.NONE;
+        return null;
     }
 
     @Override
-    public BreakStatus visit(repeat_until ru) {
+    public Void visit(repeat_until ru) {
         // By definition this would have to be recursive but of course a do-while loop with the condition swapped is equivalent
         // And a stackoverflow is not our goal, so we do that
         do{
-            if(ru.s().accept(this)==BreakStatus.BREAK) break;
+            ru.s().accept(this);
         }
         while(!ru.b().accept(this));
-        return BreakStatus.NONE;
+        return null;
     }
 }

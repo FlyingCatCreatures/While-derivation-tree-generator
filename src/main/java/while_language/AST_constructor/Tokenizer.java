@@ -38,11 +38,16 @@ public class Tokenizer {
     private final List<Token> tokens;
 
     private static final Set<String> KEYWORDS = Set.of(
-        "skip", "if", "then", "else", "while", "do", "true", "false", "repeat", "until", "break", "continue"
+        "skip", "if", "then", "else", "while", "do", "true", "false", "repeat", "until"
     );
     private static final Set<String> OPS = Set.of(
         ":=", "+", "-", "*", "=", "<=", "<", ">", ">=", "!", "&"
     );
+
+    private static final int MAX_OP_LEN = OPS.stream()
+        .mapToInt(String::length)
+        .max()
+        .orElse(0);
 
     public Tokenizer(String input) {
         this.input = input;
@@ -96,21 +101,19 @@ public class Tokenizer {
     }
 
     private Token readOp() {
-        for (String op : OPS) {
-            if (input.startsWith(op, pos)) { // Every operator happens to start with a different character so we can do this
-                int start = pos;
-                pos += op.length();
+        int remaining = input.length() - pos;
+        int maxTry = Math.min(MAX_OP_LEN, remaining);
 
-                String read_op = input.substring(start, pos);
-
-                if(!read_op.equals(op)) 
-                    throw new RuntimeException("Unknown operator at position " + pos + ". Expected " + op);
-                
-                return new Token(TokenType.OP, read_op);
+        // Try longest possible substring first, so that for things like <= we read just that and not <
+        // Otherwise it'd see the '=' as an unexpected token, since < is also an operator.
+        for (int len = maxTry; len > 0; len--) {
+            String slice = input.substring(pos, pos + len);
+            if (OPS.contains(slice)) {
+                pos += len;
+                return new Token(TokenType.OP, slice);
             }
         }
 
-        // If we get here we couldn't recognize any operator at pos, otherwise we'd have returned by now
         throw new RuntimeException("Unknown operator at position " + pos);
     }
 }

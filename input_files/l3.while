@@ -1,7 +1,0 @@
-x:=5;
-y:=3;
-while x<=7 do (
-    x:=x+2;
-    if ! x<=8 then break else skip;
-    y:=y*3
-)

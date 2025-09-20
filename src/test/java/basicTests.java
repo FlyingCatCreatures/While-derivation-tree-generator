@@ -62,31 +62,6 @@ public class basicTests {
     }
 
     @Test
-    void testBreakWhile() throws Exception {
-        Map<String, Integer> expected = Map.of("x", 0);
-        TestHelper.assertFinalState("breakwhile.while", expected);
-    }
-
-    @Test
-    void testBreakRepeat() throws Exception {
-        Map<String, Integer> expected = Map.of("y", 0);
-        TestHelper.assertFinalState("breakrepeat.while", expected);
-    }
-
-    @Test
-    void testContinueWhile() throws Exception {
-        Map<String, Integer> init = Map.of("x", 0, "y", 0);
-        Map<String, Integer> expected = Map.of("x", 3, "y", 0);
-        TestHelper.assertFinalState("continuewhile.while", init, expected);
-    }
-    @Test
-    void testContinueRepeat() throws Exception {
-        Map<String, Integer> init = Map.of("x", 0, "y", 0);
-        Map<String, Integer> expected = Map.of("x", 3, "y", 0);
-        TestHelper.assertFinalState("continuerepeat.while", init, expected); 
-    }
-
-    @Test
     void testIfTrue() throws Exception {
         Map<String, Integer> expected = Map.of("y", 1);
         TestHelper.assertFinalState("if_true.while", expected);

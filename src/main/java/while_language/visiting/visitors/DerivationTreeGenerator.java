@@ -4,14 +4,14 @@ import java.util.Map;
 import java.util.Set;
 
 import while_language.Syntax.stm.*;
-import while_language.util.BreakStatus;
 import while_language.visiting.StmVisitor;
 
-public class DerivationTreeGenerator implements StmVisitor<BreakStatus> {
+public class DerivationTreeGenerator implements StmVisitor<Void> {
     private StringBuilder sb;
     private int indent = 0;
     private final Set<String> allVars;
     private final Evaluator eval;
+
     public DerivationTreeGenerator(Set<String> vars, String varwidth,  Map<String, Integer> init_state){
         eval = new Evaluator(init_state);
 
@@ -23,8 +23,9 @@ public class DerivationTreeGenerator implements StmVisitor<BreakStatus> {
             \\usepackage{amsfonts} %s for \\mathbb{}
 
             \\begin{document}
-            """.formatted(varwidth, '%');
-        sb = new StringBuilder(preamble + makeLegend() + "\\\\  \n\n");
+            %s \\\\ \n\n
+            """.formatted(varwidth, '%', makeLegend());
+        sb = new StringBuilder(preamble);
     }
 
     private void indent() { indent++; }
@@ -33,31 +34,23 @@ public class DerivationTreeGenerator implements StmVisitor<BreakStatus> {
     private void appendLine(String line) {
         sb.append("\t".repeat(indent)).append(line).append("\n");
     }
-    
-    private static String marker(BreakStatus b) {
-        return switch (b) {
-            case NONE -> "\\circ";
-            case BREAK -> "\\bullet";
-            case CONTINUE -> "\\triangle";
-        };
-    }
-    
-    private void appendStep(Stm stm, String originalState, BreakStatus breakStatus, String rule) {
+
+    private void appendStep(Stm stm, String originalState, String rule) {
         PrintVisitor printer = new PrintVisitor();
         stm.accept(printer);
         indent();
-        appendLine("\\langle %s, %s \\rangle \\rightarrow (%s, %s) \\ ^{%s}".formatted(
-            printer.toString(), originalState, str(eval.state), marker(breakStatus), rule
+        appendLine("\\langle %s, %s \\rangle \\rightarrow %s \\ ^{%s}".formatted(
+            printer.toString(), originalState, str(eval.state), rule
         ));
         dedent();
     }
    
-    private void appendStep(Stm stm, String originalState, BreakStatus breakStatus) {
+    private void appendStep(Stm stm, String originalState) {
         PrintVisitor printer = new PrintVisitor();
         stm.accept(printer);
         indent();
-        appendLine("\\langle %s, %s \\rangle \\rightarrow (%s, %s)".formatted(
-            printer.toString(), originalState, str(eval.state), marker(breakStatus)
+        appendLine("\\langle %s, %s \\rangle \\rightarrow %s".formatted(
+            printer.toString(), originalState, str(eval.state)
         ));
         dedent();
     }
@@ -116,33 +109,23 @@ public class DerivationTreeGenerator implements StmVisitor<BreakStatus> {
         return state_sb.toString();
     }
 
-    public BreakStatus visit(assign a) {
+    public Void visit(assign a) {
         String var = a.x().x();
         Integer value = a.a().accept(eval);
 
         String originalState = str(eval.state); // Store string representation of s
         eval.state.put(var, value); // Transition to s'
 
-        appendStep(a, originalState, BreakStatus.NONE, "[ass_{ns}]");
-        return BreakStatus.NONE;
+        appendStep(a, originalState, "[ass_{ns}]");
+        return null;
     }
 
-    public BreakStatus visit(skip s) {
-        appendStep(s, str(eval.state), BreakStatus.NONE, "[skip_{ns}]");
-        return BreakStatus.NONE;
+    public Void visit(skip s) {
+        appendStep(s, str(eval.state), "[skip_{ns}]");
+        return null;
     }
 
-    public BreakStatus visit(Break b) {
-        appendStep(b, str(eval.state), BreakStatus.BREAK, "[break_{ns}]");
-        return BreakStatus.BREAK;
-    }
-
-    public BreakStatus visit(Continue c) {
-        appendStep(c, str(eval.state), BreakStatus.CONTINUE, "[continue_{ns}]");
-        return BreakStatus.CONTINUE;
-    }
-
-    public BreakStatus visit(if_then_else ite){
+    public Void visit(if_then_else ite){
         String state_before = str(eval.state);
 
         boolean cond = ite.b().accept(eval);
@@ -150,128 +133,82 @@ public class DerivationTreeGenerator implements StmVisitor<BreakStatus> {
 
         appendLine("\\begin{prooftree}");
         indent();
-        BreakStatus breakstatus = s.accept(this);
+        s.accept(this);
         dedent();
         appendLine("\\justifies");
-        appendStep(ite, state_before, breakstatus);
+        appendStep(ite, state_before);
         appendLine("\\thickness = 0.1 em");
         appendLine("\\using");
         indent();
         appendLine("[if_{ns}^{%s}]".formatted(cond ? "tt":"ff"));
         dedent();
         appendLine("\\end{prooftree}");
-        return breakstatus;
+        return null;
     }
 
-    public BreakStatus visit(compound c){
+    public Void visit(compound c){
         String state_before = str(eval.state);
 
         appendLine("\\begin{prooftree}");
         indent();
-        BreakStatus b1 = c.s1().accept(this);
-        BreakStatus retStatus = b1; // The one we are going to continue with
-        if(b1 == BreakStatus.NONE){
-            // If no break was encountered we go on with the second statement
-            retStatus = c.s2().accept(this);
-        }
+        c.s1().accept(this);
+        c.s2().accept(this);
         
-        // if a break or continue was encountered in s1 we skip s2
         dedent();
         appendLine("\\justifies");
-        appendStep(c, state_before, retStatus);
+        appendStep(c, state_before);
         appendLine("\\thickness = 0.1 em");
         appendLine("\\using");
         indent();
-        appendLine("[comp_{ns}^{%s}]".formatted(marker(retStatus)));
+        appendLine("[comp_{ns}]");
         dedent();
         appendLine("\\end{prooftree}");
-        return retStatus;
+        return null;
     }
 
-    public BreakStatus visit(while_do wd){
+    public Void visit(while_do wd){
         String originalState = str(eval.state); 
         boolean cond = wd.b().accept(eval);
 
         if(!cond){
-            appendStep(wd, originalState, BreakStatus.NONE, "[while_{ns}^{ff}]");
-            return BreakStatus.NONE;
+            appendStep(wd, originalState, "[while_{ns}^{ff}]");
+            return null;
         }
 
         appendLine("\\begin{prooftree}");
         indent();
-        BreakStatus b = wd.s().accept(this);
-        if(b == BreakStatus.BREAK){
-            dedent();
-            appendLine("\\justifies");
-            appendStep(wd, originalState, BreakStatus.NONE);
-            appendLine("\\thickness = 0.1 em");
-            appendLine("\\using");
-            indent();
-            appendLine("[while_{ns}^{tt\\bullet}]");
-            dedent();
-            appendLine("\\end{prooftree}");
-            return BreakStatus.NONE;
-        }
-
-
+        wd.s().accept(this);
         wd.accept(this);
         dedent();
         appendLine("\\justifies");
-        appendStep(wd, originalState, BreakStatus.NONE);
+        appendStep(wd, originalState);
         appendLine("\\thickness = 0.1 em");
         appendLine("\\using");
         indent();
         appendLine("[while_{ns}^{tt\\circ}]");
         dedent();
         appendLine("\\end{prooftree}");
-        return BreakStatus.NONE;
+        return null;
     }  
     
-    public BreakStatus visit(repeat_until ru) {
+    public Void visit(repeat_until ru) {
         String originalState = str(eval.state);
 
         appendLine("\\begin{prooftree}");
         indent();
-
-        BreakStatus b = ru.s().accept(this);
-        if (b == BreakStatus.BREAK) {
-            dedent();
-            appendLine("\\justifies");
-            appendStep(ru, originalState, BreakStatus.NONE);
-            appendLine("\\thickness = 0.1 em");
-            appendLine("\\using");
-            indent();
-            appendLine("[repeat-until_{ns}^{\\bullet}]");
-            dedent();
-            appendLine("\\end{prooftree}");
-            return BreakStatus.NONE;
-        }
-
+        ru.s().accept(this);
         boolean cond = ru.b().accept(eval);
-        if (cond) {
-            dedent();
-            appendLine("\\justifies");
-            appendStep(ru, originalState, BreakStatus.NONE);
-            appendLine("\\thickness = 0.1 em");
-            appendLine("\\using");
-            indent();
-            appendLine("[repeat-until_{ns}^{tt}]");
-            dedent();
-            appendLine("\\end{prooftree}");
-            return BreakStatus.NONE;
-        } else {
-            ru.accept(this);
-            dedent();
-            appendLine("\\justifies");
-            appendStep(ru, originalState, BreakStatus.NONE);
-            appendLine("\\thickness = 0.1 em");
-            appendLine("\\using");
-            indent();
-            appendLine("[repeat-until_{ns}^{ff}]");
-            dedent();
-            appendLine("\\end{prooftree}");
-            return BreakStatus.NONE;
-        }
+        if(!cond) ru.accept(this);
+        dedent();
+        appendLine("\\justifies");
+        appendStep(ru, originalState);
+        appendLine("\\thickness = 0.1 em");
+        appendLine("\\using");
+        indent();
+        appendLine("[repeat-until_{ns}^{%s}]".formatted(cond? "tt" : "ff"));
+        dedent();
+        appendLine("\\end{prooftree}");
+        return null;
     }
 
 }

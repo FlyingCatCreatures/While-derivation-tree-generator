@@ -4,7 +4,6 @@ import while_language.AST_constructor.Parser;
 import while_language.AST_constructor.Tokenizer;
 import while_language.AST_constructor.Tokenizer.Token;
 import while_language.Syntax.stm.Stm;
-import while_language.util.BreakStatus;
 import while_language.visiting.StmVisitor;
 import while_language.visiting.visitors.DerivationTreeGenerator;
 import while_language.visiting.visitors.Evaluator;
@@ -112,7 +111,7 @@ public class Main {
 
             // Create derivation tree
             System.out.println("Generating syntax Tree...");
-            StmVisitor<BreakStatus> visitor = new DerivationTreeGenerator(vars, pdf_maxwidth, init_state);
+            StmVisitor<Void> visitor = new DerivationTreeGenerator(vars, pdf_maxwidth, init_state);
             ast.accept(visitor);
             
             // Write all output to <filename>.out
