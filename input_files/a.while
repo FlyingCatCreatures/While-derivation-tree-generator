@@ -1,4 +1,2 @@
-while x <= 5 do (
-    x := x + 1;
-    y := y + 1
-)
+z := 2; 
+while y<=x do (z := z+5; x:= x-y)

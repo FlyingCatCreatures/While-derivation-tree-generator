@@ -5,9 +5,10 @@ import while_language.AST_constructor.Tokenizer;
 import while_language.AST_constructor.Tokenizer.Token;
 import while_language.Syntax.stm.Stm;
 import while_language.visiting.StmVisitor;
-import while_language.visiting.visitors.DerivationTreeGenerator;
+import while_language.visiting.visitors.DerivationTreeGeneratorNS;
 import while_language.visiting.visitors.Evaluator;
 import while_language.visiting.visitors.PrintVisitor;
+import while_language.visiting.visitors.SequenceGeneratorSOS;
 import while_language.visiting.visitors.SyntaxTreePrintVisitor;
 
 import java.nio.file.Files;
@@ -111,12 +112,15 @@ public class Main {
 
             // Create derivation tree
             System.out.println("Generating syntax Tree...");
-            StmVisitor<Void> visitor = new DerivationTreeGenerator(vars, pdf_maxwidth, init_state);
-            ast.accept(visitor);
-            
+            //StmVisitor<Void> visitor = new DerivationTreeGeneratorNS(vars, pdf_maxwidth, init_state);
+            //ast.accept(visitor);
+            SequenceGeneratorSOS s = new SequenceGeneratorSOS(vars, pdf_maxwidth, init_state);
+            s.run(ast);
+
             // Write all output to <filename>.out
             Path outFile = Path.of("output_files/" + filename + "-tree.tex");
-            Files.writeString(outFile, visitor.toString());
+            //Files.writeString(outFile, visitor.toString());
+            Files.writeString(outFile, s.toString());
             System.out.println("Output written to " + outFile.toAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();

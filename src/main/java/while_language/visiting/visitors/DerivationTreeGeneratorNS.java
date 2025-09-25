@@ -6,13 +6,13 @@ import java.util.Set;
 import while_language.Syntax.stm.*;
 import while_language.visiting.StmVisitor;
 
-public class DerivationTreeGenerator implements StmVisitor<Void> {
+public class DerivationTreeGeneratorNS implements StmVisitor<Void> {
     private StringBuilder sb;
     private int indent = 0;
     private final Set<String> allVars;
     private final Evaluator eval;
 
-    public DerivationTreeGenerator(Set<String> vars, String varwidth,  Map<String, Integer> init_state){
+    public DerivationTreeGeneratorNS(Set<String> vars, String varwidth,  Map<String, Integer> init_state){
         eval = new Evaluator(init_state);
 
         allVars = vars;
@@ -79,7 +79,7 @@ public class DerivationTreeGenerator implements StmVisitor<Void> {
             first = false;
         }
 
-        return "For this tree we denote $s_{" + vars + "}$ to denote $s[" + mapping + "]$, where $" + vars + "\\in \\mathbb{N}$";
+        return "For this tree we denote $s_{" + vars + "}$ to denote $s[" + mapping + "]$, where $" + vars + "\\in \\mathbb{Z}$";
     }
 
     @Override

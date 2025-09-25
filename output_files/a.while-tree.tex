@@ -1,91 +1,51 @@
 % !TEX TS-program = XeLaTeX
 \documentclass[varwidth=100cm]{standalone}
-\usepackage{prooftree}
-\usepackage{amsfonts} % for \mathbb{}
-
+\usepackage{amsfonts}
+\usepackage{amsmath}
 \begin{document}
-For this tree we denote $s_{a,b}$ to denote $s[x\mapsto a][y\mapsto b]$, where $a,b\in \mathbb{N}$ \\ 
+For this sequence we denote $s_{a,b,c}$ to denote $s[x\mapsto a][y\mapsto b][z\mapsto c]$, where $a,b,c\in \mathbb{Z}$ \\ 
 
 
-\begin{prooftree}
-	\begin{prooftree}
-			\langle x := x + 1, s_{1,1} \rangle \rightarrow s_{2,1} \ ^{[ass_{ns}]}
-			\langle y := y + 1, s_{2,1} \rangle \rightarrow s_{2,2} \ ^{[ass_{ns}]}
-	\justifies
-		\langle x := x + 1; y := y + 1, s_{1,1} \rangle \rightarrow s_{2,2}
-	\thickness = 0.1 em
-	\using
-		[comp_{ns}]
-	\end{prooftree}
-	\begin{prooftree}
-		\begin{prooftree}
-				\langle x := x + 1, s_{2,2} \rangle \rightarrow s_{3,2} \ ^{[ass_{ns}]}
-				\langle y := y + 1, s_{3,2} \rangle \rightarrow s_{3,3} \ ^{[ass_{ns}]}
-		\justifies
-			\langle x := x + 1; y := y + 1, s_{2,2} \rangle \rightarrow s_{3,3}
-		\thickness = 0.1 em
-		\using
-			[comp_{ns}]
-		\end{prooftree}
-		\begin{prooftree}
-			\begin{prooftree}
-					\langle x := x + 1, s_{3,3} \rangle \rightarrow s_{4,3} \ ^{[ass_{ns}]}
-					\langle y := y + 1, s_{4,3} \rangle \rightarrow s_{4,4} \ ^{[ass_{ns}]}
-			\justifies
-				\langle x := x + 1; y := y + 1, s_{3,3} \rangle \rightarrow s_{4,4}
-			\thickness = 0.1 em
-			\using
-				[comp_{ns}]
-			\end{prooftree}
-			\begin{prooftree}
-				\begin{prooftree}
-						\langle x := x + 1, s_{4,4} \rangle \rightarrow s_{5,4} \ ^{[ass_{ns}]}
-						\langle y := y + 1, s_{5,4} \rangle \rightarrow s_{5,5} \ ^{[ass_{ns}]}
-				\justifies
-					\langle x := x + 1; y := y + 1, s_{4,4} \rangle \rightarrow s_{5,5}
-				\thickness = 0.1 em
-				\using
-					[comp_{ns}]
-				\end{prooftree}
-				\begin{prooftree}
-					\begin{prooftree}
-							\langle x := x + 1, s_{5,5} \rangle \rightarrow s_{6,5} \ ^{[ass_{ns}]}
-							\langle y := y + 1, s_{6,5} \rangle \rightarrow s_{6,6} \ ^{[ass_{ns}]}
-					\justifies
-						\langle x := x + 1; y := y + 1, s_{5,5} \rangle \rightarrow s_{6,6}
-					\thickness = 0.1 em
-					\using
-						[comp_{ns}]
-					\end{prooftree}
-						\langle $while $x <= 5$ do $(x := x + 1; y := y + 1), s_{6,6} \rangle \rightarrow s_{6,6} \ ^{[while_{ns}^{ff}]}
-				\justifies
-					\langle $while $x <= 5$ do $(x := x + 1; y := y + 1), s_{5,5} \rangle \rightarrow s_{6,6}
-				\thickness = 0.1 em
-				\using
-					[while_{ns}^{tt\circ}]
-				\end{prooftree}
-			\justifies
-				\langle $while $x <= 5$ do $(x := x + 1; y := y + 1), s_{4,4} \rangle \rightarrow s_{6,6}
-			\thickness = 0.1 em
-			\using
-				[while_{ns}^{tt\circ}]
-			\end{prooftree}
-		\justifies
-			\langle $while $x <= 5$ do $(x := x + 1; y := y + 1), s_{3,3} \rangle \rightarrow s_{6,6}
-		\thickness = 0.1 em
-		\using
-			[while_{ns}^{tt\circ}]
-		\end{prooftree}
-	\justifies
-		\langle $while $x <= 5$ do $(x := x + 1; y := y + 1), s_{2,2} \rangle \rightarrow s_{6,6}
-	\thickness = 0.1 em
-	\using
-		[while_{ns}^{tt\circ}]
-	\end{prooftree}
-\justifies
-	\langle $while $x <= 5$ do $(x := x + 1; y := y + 1), s_{1,1} \rangle \rightarrow s_{6,6}
-\thickness = 0.1 em
-\using
-	[while_{ns}^{tt\circ}]
-\end{prooftree}
+$ \langle z := 2; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,\bot} \rangle $
+
+$ \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,2} \rangle $
+
+$ \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{42,9,2} \rangle $
+
+$ \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,2} \rangle $
+
+$ \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,7} \rangle $
+
+$ \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,7} \rangle $
+
+$ \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{33,9,7} \rangle $
+
+$ \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,7} \rangle $
+
+$ \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,12} \rangle $
+
+$ \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,12} \rangle $
+
+$ \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{24,9,12} \rangle $
+
+$ \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,12} \rangle $
+
+$ \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,17} \rangle $
+
+$ \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,17} \rangle $
+
+$ \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{15,9,17} \rangle $
+
+$ \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,17} \rangle $
+
+$ \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,22} \rangle $
+
+$ \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{6,9,22} \rangle $
+
+$ \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{6,9,22} \rangle $
+
+$ \Rightarrow \langle \text{skip}, s_{6,9,22} \rangle $
+
+$ \Rightarrow s_{6,9,22} $
+
 \end{document}

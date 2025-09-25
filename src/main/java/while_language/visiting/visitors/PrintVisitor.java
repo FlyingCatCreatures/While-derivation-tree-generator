@@ -20,7 +20,7 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
     // Statements
     @Override
     public Void visit(skip s) {
-        sb.append("$skip$");
+        sb.append("\\text{skip}");
         return null;
     }
 
@@ -44,15 +44,15 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
         boolean doParenthesisForS1 = ite.s1() instanceof compound;
         boolean doParenthesisForS2 = ite.s2() instanceof compound;
 
-        sb.append("$if $");
+        sb.append("\\text{if }");
         ite.b().accept(this);
         
-        sb.append("$ then $");
+        sb.append("\\text{ then }");
         if(doParenthesisForS1) sb.append("(");
         ite.s1().accept(this);
         if(doParenthesisForS1) sb.append(")");
 
-        sb.append("$ else $");
+        sb.append("\\text{ else }");
         if(doParenthesisForS2) sb.append("(");
         ite.s2().accept(this);
         if(doParenthesisForS2) sb.append(")");
@@ -63,9 +63,9 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
     public Void visit(while_do w) {
         boolean doParenthesis = w.s() instanceof compound;
 
-        sb.append("$while $");
+        sb.append("\\text{while }");
         w.b().accept(this);
-        sb.append("$ do $");
+        sb.append("\\text{ do }");
         if (doParenthesis) sb.append("(");
         w.s().accept(this);
         if (doParenthesis) sb.append(")");
@@ -75,11 +75,11 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
     public Void visit(repeat_until ru){
         boolean doParenthesis = ru.s() instanceof compound;
 
-        sb.append("$repeat $");
+        sb.append("\\text{repeat }");
         if (doParenthesis) sb.append("(");
         ru.s().accept(this);
         if (doParenthesis) sb.append(")");
-        sb.append("$ until $");
+        sb.append("\\text{ until }");
         ru.b().accept(this);
         return null;
     }
@@ -123,13 +123,13 @@ public class PrintVisitor implements StmVisitor<Void>, AexpVisitor<Void>, BexpVi
     // Boolean expressions
     @Override
     public Void visit(True t) {
-        sb.append("$true$");
+        sb.append("\\text{true}");
         return null;
     }
 
     @Override
     public Void visit(False f) {
-        sb.append("$false$");
+        sb.append("\\text{false}");
         return null;
     }
 
