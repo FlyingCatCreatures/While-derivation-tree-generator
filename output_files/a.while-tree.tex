@@ -2,50 +2,247 @@
 \documentclass[varwidth=100cm]{standalone}
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{prooftree}
 \begin{document}
 For this sequence we denote $s_{a,b,c}$ to denote $s[x\mapsto a][y\mapsto b][z\mapsto c]$, where $a,b,c\in \mathbb{Z}$ \\ 
 
 
-$ \langle z := 2; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,\bot} \rangle $
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  \begin{prooftree}
+    \langle z := 2, s_{42,9,\bot} \rangle \Rightarrow s_{42,9,2} \ ^{[ass_{sos}]}
+\justifies
+    \langle z := 2; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,\bot} \rangle \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,2} \rangle
+\using
+    [comp_{sos}^2]
+\end{prooftree} & (Step 1) \\
+\end{tabular*}
+\end{center}
 
-$ \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,2} \rangle $
 
-$ \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{42,9,2} \rangle $
 
-$ \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,2} \rangle $
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  $\langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,2} \rangle \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{42,9,2} \rangle \ ^{[while_{sos}]}$ & (Step 2) \\
+\end{tabular*}
+\end{center}
 
-$ \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,7} \rangle $
 
-$ \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,7} \rangle $
 
-$ \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{33,9,7} \rangle $
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  $\langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{42,9,2} \rangle \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,2} \rangle \ ^{[if_{sos}^{tt}]}$ & (Step 3) \\
+\end{tabular*}
+\end{center}
 
-$ \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,7} \rangle $
 
-$ \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,12} \rangle $
 
-$ \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,12} \rangle $
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  \begin{prooftree}
+    \begin{prooftree}
+    \langle z := z + 5, s_{42,9,2} \rangle \Rightarrow s_{42,9,7} \ ^{[ass_{sos}]}
+\justifies
+    \langle z := z + 5; x := x - y, s_{42,9,2} \rangle \Rightarrow \langle x := x - y, s_{42,9,7} \rangle
+\using
+    [comp_{sos}^2]
+\end{prooftree}
+\justifies
+    \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,2} \rangle \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,7} \rangle
+\using
+    [comp_{sos}^1]
+\end{prooftree} & (Step 4) \\
+\end{tabular*}
+\end{center}
 
-$ \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{24,9,12} \rangle $
 
-$ \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,12} \rangle $
 
-$ \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,17} \rangle $
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  \begin{prooftree}
+    \langle x := x - y, s_{42,9,7} \rangle \Rightarrow s_{33,9,7} \ ^{[ass_{sos}]}
+\justifies
+    \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{42,9,7} \rangle \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,7} \rangle
+\using
+    [comp_{sos}^2]
+\end{prooftree} & (Step 5) \\
+\end{tabular*}
+\end{center}
 
-$ \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,17} \rangle $
 
-$ \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{15,9,17} \rangle $
 
-$ \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,17} \rangle $
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  $\langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,7} \rangle \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{33,9,7} \rangle \ ^{[while_{sos}]}$ & (Step 6) \\
+\end{tabular*}
+\end{center}
 
-$ \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,22} \rangle $
 
-$ \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{6,9,22} \rangle $
 
-$ \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{6,9,22} \rangle $
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  $\langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{33,9,7} \rangle \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,7} \rangle \ ^{[if_{sos}^{tt}]}$ & (Step 7) \\
+\end{tabular*}
+\end{center}
 
-$ \Rightarrow \langle \text{skip}, s_{6,9,22} \rangle $
 
-$ \Rightarrow s_{6,9,22} $
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  \begin{prooftree}
+    \begin{prooftree}
+    \langle z := z + 5, s_{33,9,7} \rangle \Rightarrow s_{33,9,12} \ ^{[ass_{sos}]}
+\justifies
+    \langle z := z + 5; x := x - y, s_{33,9,7} \rangle \Rightarrow \langle x := x - y, s_{33,9,12} \rangle
+\using
+    [comp_{sos}^2]
+\end{prooftree}
+\justifies
+    \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,7} \rangle \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,12} \rangle
+\using
+    [comp_{sos}^1]
+\end{prooftree} & (Step 8) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  \begin{prooftree}
+    \langle x := x - y, s_{33,9,12} \rangle \Rightarrow s_{24,9,12} \ ^{[ass_{sos}]}
+\justifies
+    \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{33,9,12} \rangle \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,12} \rangle
+\using
+    [comp_{sos}^2]
+\end{prooftree} & (Step 9) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  $\langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,12} \rangle \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{24,9,12} \rangle \ ^{[while_{sos}]}$ & (Step 10) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  $\langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{24,9,12} \rangle \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,12} \rangle \ ^{[if_{sos}^{tt}]}$ & (Step 11) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  \begin{prooftree}
+    \begin{prooftree}
+    \langle z := z + 5, s_{24,9,12} \rangle \Rightarrow s_{24,9,17} \ ^{[ass_{sos}]}
+\justifies
+    \langle z := z + 5; x := x - y, s_{24,9,12} \rangle \Rightarrow \langle x := x - y, s_{24,9,17} \rangle
+\using
+    [comp_{sos}^2]
+\end{prooftree}
+\justifies
+    \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,12} \rangle \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,17} \rangle
+\using
+    [comp_{sos}^1]
+\end{prooftree} & (Step 12) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  \begin{prooftree}
+    \langle x := x - y, s_{24,9,17} \rangle \Rightarrow s_{15,9,17} \ ^{[ass_{sos}]}
+\justifies
+    \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{24,9,17} \rangle \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,17} \rangle
+\using
+    [comp_{sos}^2]
+\end{prooftree} & (Step 13) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  $\langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,17} \rangle \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{15,9,17} \rangle \ ^{[while_{sos}]}$ & (Step 14) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  $\langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{15,9,17} \rangle \Rightarrow \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,17} \rangle \ ^{[if_{sos}^{tt}]}$ & (Step 15) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  \begin{prooftree}
+    \begin{prooftree}
+    \langle z := z + 5, s_{15,9,17} \rangle \Rightarrow s_{15,9,22} \ ^{[ass_{sos}]}
+\justifies
+    \langle z := z + 5; x := x - y, s_{15,9,17} \rangle \Rightarrow \langle x := x - y, s_{15,9,22} \rangle
+\using
+    [comp_{sos}^2]
+\end{prooftree}
+\justifies
+    \langle z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,17} \rangle \Rightarrow \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,22} \rangle
+\using
+    [comp_{sos}^1]
+\end{prooftree} & (Step 16) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  \begin{prooftree}
+    \langle x := x - y, s_{15,9,22} \rangle \Rightarrow s_{6,9,22} \ ^{[ass_{sos}]}
+\justifies
+    \langle x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{15,9,22} \rangle \Rightarrow \langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{6,9,22} \rangle
+\using
+    [comp_{sos}^2]
+\end{prooftree} & (Step 17) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  $\langle \text{while }y <= x\text{ do }(z := z + 5; x := x - y), s_{6,9,22} \rangle \Rightarrow \langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{6,9,22} \rangle \ ^{[while_{sos}]}$ & (Step 18) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  $\langle \text{if }y <= x\text{ then }(z := z + 5; x := x - y; \text{while }y <= x\text{ do }(z := z + 5; x := x - y))\text{ else }\text{skip}, s_{6,9,22} \rangle \Rightarrow \langle \text{skip}, s_{6,9,22} \rangle \ ^{[if_{sos}^{ff}]}$ & (Step 19) \\
+\end{tabular*}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular*}{0.3\textwidth}{@{\extracolsep{\fill}} c r}
+  $\langle \text{skip}, s_{6,9,22} \rangle \Rightarrow s_{6,9,22} \ ^{[skip_{sos}]}$ & (Step 20) \\
+\end{tabular*}
+\end{center}
+
+
 
 \end{document}

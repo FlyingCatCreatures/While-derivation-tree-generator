@@ -4,26 +4,25 @@ import java.util.Map;
 import java.util.Set;
 
 import while_language.Syntax.stm.Stm;
-import while_language.Syntax.stm.assign;
-import while_language.Syntax.stm.compound;
-import while_language.Syntax.stm.if_then_else;
-import while_language.Syntax.stm.repeat_until;
-import while_language.Syntax.stm.skip;
-import while_language.Syntax.stm.while_do;
+import while_language.util.configuration;
+import while_language.util.nonterminal;
+import while_language.visiting.visitors.StepVisitorSOS.configStringPair;
 
 public class SequenceGeneratorSOS {
     private final StringBuilder sb = new StringBuilder();
-    private final Evaluator eval;
+    private Map<String, Integer> state;
     private final Set<String> allVars;
+    private int stepCounter = 1; 
 
     public SequenceGeneratorSOS(Set<String> vars, String varwidth, Map<String,Integer> init_state) {
-        eval = new Evaluator(init_state);
+        state = init_state;
         allVars = vars;
         String preamble = """
             %% !TEX TS-program = XeLaTeX
             \\documentclass[varwidth=%s]{standalone}
             \\usepackage{amsfonts}
             \\usepackage{amsmath}
+            \\usepackage{prooftree}
             \\begin{document}
             %s \\\\ \n\n
             """.formatted(varwidth, makeLegend());
@@ -32,99 +31,26 @@ public class SequenceGeneratorSOS {
 
     // Run the whole program
     public void run(Stm program) {
-        Object current = program;
+        configuration current = new nonterminal(program, state);
 
-        // Print the very first configuration
-        sb.append("$ ").append(conf(program, eval.state)).append(" $\n\n");
+        while (current instanceof nonterminal nt) {
+            StepVisitorSOS stepVisitor = new StepVisitorSOS(state, nt, allVars);
+            configStringPair csp = stepVisitor.step();
+            current = csp.c();
 
-        while (true) {
-            if (current instanceof Stm stm) {
-                Object next = step(stm);
-
-                if (next instanceof Stm snext) {
-                    sb.append("$ \\Rightarrow ").append(conf(snext, eval.state)).append(" $\n\n");
-                    current = snext;
-                } else {
-                    sb.append("$ \\Rightarrow ").append(conf(eval.state)).append(" $\n\n");
-                    break;
-                }
-            } else {
-                break; // reached a state
-            }
+            sb.append("""
+                \\begin{center}
+                \\begin{tabular*}{0.3\\textwidth}{@{\\extracolsep{\\fill}} c r}
+                %s & (Step %d) \\\\
+                \\end{tabular*}
+                \\end{center}
+                \n\n
+                """.formatted(csp.s(), stepCounter++));
         }
     }
 
-
-
-    private Object step(Stm stm) {
-        if (stm instanceof assign a) {
-            Integer val = a.a().accept(eval);
-            eval.state.put(a.x().x(), val);
-            return eval.state; // terminates in state
-        }
-        if (stm instanceof skip) {
-            return eval.state; // terminates in state
-        }
-        if (stm instanceof if_then_else ite) {
-            boolean cond = ite.b().accept(eval);
-            return cond ? ite.s1() : ite.s2();
-        }
-        if (stm instanceof compound c) {
-            // comp1 or comp2
-            Object s1next = step(c.s1());
-            if (s1next instanceof Stm s1p) {
-                return compoundStep(s1p, c.s2()); // comp₁
-            } else {
-                return c.s2(); // comp2, s1 finished
-            }
-        }
-        if (stm instanceof while_do w) {
-            return new if_then_else(
-                w.b(),
-                new compound(w.s(), w),
-                new skip()
-            );
-        }
-        if (stm instanceof repeat_until ru) {
-            return new compound(
-                ru.s(),
-                new if_then_else(ru.b(), new skip(), ru)
-            );
-        }
-        
-        throw new UnsupportedOperationException("Unknown Stm type: " + stm.getClass());
-    }
-
-    private Stm compoundStep(Stm s1p, Stm s2) {
-        return new compound(s1p, s2);
-    }
 
     // --- LaTeX pretty-printing stuff ---
-
-    private void appendStep(String from, String to) {
-        sb.append(from).append(" \\Rightarrow ").append(to).append("\n");
-    }
-
-    private String conf(Stm stm, Map<String,Integer> s) {
-        PrintVisitor pv = new PrintVisitor();
-        stm.accept(pv);
-        return "\\langle " + pv.toString() + ", " + str(s) + " \\rangle";
-    }
-
-    private String conf(Map<String,Integer> s) {
-        return str(s);
-    }
-
-    private String str(Map<String,Integer> s) {
-        StringBuilder b = new StringBuilder("s_{");
-        boolean first = true;
-        for (String var : allVars) {
-            if (!first) b.append(",");
-            b.append(s.getOrDefault(var, null) == null ? "\\bot" : s.get(var));
-            first = false;
-        }
-        return b.append("}").toString();
-    }
 
     private String makeLegend() {
         if (allVars.isEmpty()) return "For this sequence we denote s to denote the empty state.";
